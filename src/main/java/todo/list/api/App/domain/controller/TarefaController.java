@@ -2,6 +2,7 @@ package todo.list.api.App.domain.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import todo.list.api.App.domain.dto.tarefa.DadosCriacaoTarefasDTO;
@@ -27,14 +28,15 @@ public class TarefaController {
     private TokenService tokenService;
 
     @GetMapping
-    public List<DadosListagemTarefaDTO> listarTarefas(HttpServletRequest request) {
+    public ResponseEntity<List<DadosListagemTarefaDTO>> listarTarefas(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         Long id = tokenService.getClaim(token);
         if (id != null) {
             Usuario usuario = usuarioRepository.getReferenceById(id);
-            return usuario.getTarefas().stream()
+            List<DadosListagemTarefaDTO> listaTarefas =  usuario.getTarefas().stream()
                     .map(DadosListagemTarefaDTO::new)
-                    .collect(Collectors.toList());
+                    .toList();
+            return ResponseEntity.ok(listaTarefas);
         } else {
             return null;
         }
@@ -42,16 +44,20 @@ public class TarefaController {
 
     @Transactional
     @PostMapping
-    public void inserirTarefa(@RequestBody DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
+    public ResponseEntity<DadosCriacaoTarefasDTO> inserirTarefa(@RequestBody DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-
         Long id = tokenService.getClaim(token);
         if (id != null) {
             Usuario usuario = usuarioRepository.getReferenceById(id);
             Tarefa tarefa = new Tarefa(dadosTarefa);
             tarefa.setUsuario(usuario);
             usuario.setTarefas(tarefa);
+
+            DadosCriacaoTarefasDTO tarefasDTO =  new DadosCriacaoTarefasDTO(tarefa.getTitulo(), tarefa.getDescricao(), tarefa.getData().toString());
+
+            return ResponseEntity.ok(tarefasDTO);
         }
 
+        return ResponseEntity.badRequest().build();
     }
 }

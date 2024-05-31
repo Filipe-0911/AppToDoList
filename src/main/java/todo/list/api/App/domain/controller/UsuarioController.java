@@ -1,6 +1,7 @@
 package todo.list.api.App.domain.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +36,8 @@ public class UsuarioController {
 
     @Transactional
     @PostMapping("/addUser")
-    public ResponseEntity<DadosUsuarioDTO> criarUsuario(@RequestBody DadosCriacaoUsuarioDTO dados) {
-
-        Usuario usuario = new Usuario(new UsuarioService(dados));
+    public ResponseEntity<DadosUsuarioDTO> criarUsuario(@RequestBody @Valid DadosCriacaoUsuarioDTO dados) {
+        Usuario usuario = new Usuario(dados);
         repository.save(usuario);
 
         return ResponseEntity.ok(new DadosUsuarioDTO(usuario));

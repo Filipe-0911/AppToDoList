@@ -31,10 +31,10 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Tarefa> tarefas = new ArrayList<>();
 
-    public Usuario(UsuarioService dados) {
-        this.login = dados.getLogin();
-        this.nome = dados.getNome();
-        this.senha = dados.getSenha();
+    public Usuario(DadosCriacaoUsuarioDTO dados) {
+        this.login = dados.login();
+        this.nome = dados.nome();
+        this.senha = UsuarioService.encriptadorSenhaUsuario(dados.senha());
     }
 
     public void setTarefas(Tarefa tarefa) {

@@ -4,4 +4,5 @@ public record DadosCriacaoUsuarioDTO(
         String login,
         String nome,
         String senha) {
+
 }
