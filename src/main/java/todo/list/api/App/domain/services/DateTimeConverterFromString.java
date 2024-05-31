@@ -10,4 +10,7 @@ public class DateTimeConverterFromString {
     public static LocalDateTime parse (String data) {
         return LocalDate.parse(data, parser).atStartOfDay();
     }
+    public static String toString(LocalDateTime data) {
+        return data.toString();
+    }
 }

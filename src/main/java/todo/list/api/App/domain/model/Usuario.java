@@ -5,7 +5,9 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
 import todo.list.api.App.domain.dto.usuario.DadosUsuarioDTO;
+import todo.list.api.App.domain.services.UsuarioService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,10 +31,10 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Tarefa> tarefas = new ArrayList<>();
 
-    public Usuario(DadosUsuarioDTO dados) {
-        this.login = dados.login();
-        this.nome = dados.nome();
-//        this.senha = dados.senha();
+    public Usuario(UsuarioService dados) {
+        this.login = dados.getLogin();
+        this.nome = dados.getNome();
+        this.senha = dados.getSenha();
     }
 
     public void setTarefas(Tarefa tarefa) {
