@@ -14,8 +14,6 @@ import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.infra.security.TokenService;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/tarefas")
