@@ -12,6 +12,7 @@ import todo.list.api.App.domain.repository.TarefaRepository;
 import todo.list.api.App.domain.repository.UsuarioRepository;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.services.TarefaService;
+import todo.list.api.App.domain.services.UsuarioService;
 import todo.list.api.App.infra.security.TokenService;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class TarefaController {
     private TokenService tokenService;
     @Autowired
     private TarefaService tarefaService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping
     public ResponseEntity<List<DadosListagemTarefaDTO>> listarTarefas(HttpServletRequest request) {
-        Long id = __retornaId(request);
+        Long id = usuarioService.buscaUsuario(request).getId();
         if (id != null) {
             return tarefaService.buscaTarefasUsuario(id);
         }
@@ -38,22 +41,19 @@ public class TarefaController {
     }
     @GetMapping("/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> obterDadosTarefaEspecifica(@PathVariable Long idTarefa, HttpServletRequest request) {
-        Long idUsuario = __retornaId(request);
+        Long idUsuario = usuarioService.buscaUsuario(request).getId();
         return tarefaService.getTarefaEspecifica(idUsuario, idTarefa);
     }
-
     @Transactional
     @PostMapping
     public ResponseEntity<DadosDetalhamentoTarefaDTO> inserirTarefa(@RequestBody DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
-        Long id = __retornaId(request);
+        Long id = usuarioService.buscaUsuario(request).getId();
         return tarefaService.criarTarefa(dadosTarefa, id);
     }
-
     @Transactional
     @PutMapping("/concluir/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> concluirTarefa(@PathVariable Long idTarefa, HttpServletRequest request) {
-        Long id = __retornaId(request);
-        Usuario usuario = usuarioRepository.getReferenceById(id);
+        Usuario usuario = usuarioService.buscaUsuario(request);
         return tarefaService.concluirTarefa(idTarefa, usuario);
     }
     @Transactional
@@ -62,15 +62,9 @@ public class TarefaController {
             @PathVariable Long idTarefa,
             @RequestBody DadosCriacaoTarefasDTO alteracao,
             HttpServletRequest request) {
-        Long id = __retornaId(request);
-        Usuario usuario = usuarioRepository.getReferenceById(id);
 
+        Usuario usuario = usuarioService.buscaUsuario(request);
         return tarefaService.atualizarInformacoes(idTarefa, alteracao, usuario);
-    }
-
-    private Long __retornaId(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        return tokenService.getClaim(token);
     }
 
 }
