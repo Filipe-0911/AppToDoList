@@ -22,6 +22,9 @@ public class Tarefa {
     private LocalDateTime data;
 
     @Setter
+    private boolean concluido;
+
+    @Setter
     @ManyToOne
     private Usuario usuario;
 
@@ -29,6 +32,18 @@ public class Tarefa {
         this.titulo = dados.titulo();
         this.descricao = dados.descricao();
         this.data = DateTimeConverterFromString.parse(dados.data());
+        this.concluido = false;
     }
 
+    public void atualizarInformacoes(DadosCriacaoTarefasDTO alteracao) {
+        if (alteracao.data() != null) {
+            this.data = DateTimeConverterFromString.parse(alteracao.data());
+        }
+        if (alteracao.titulo() != null) {
+            this.titulo = alteracao.titulo();
+        }
+        if (alteracao.descricao() != null) {
+            this.descricao = alteracao.descricao();
+        }
+    }
 }

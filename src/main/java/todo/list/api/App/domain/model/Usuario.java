@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
-import todo.list.api.App.domain.dto.usuario.DadosUsuarioDTO;
 import todo.list.api.App.domain.services.UsuarioService;
 
 import java.util.ArrayList;
