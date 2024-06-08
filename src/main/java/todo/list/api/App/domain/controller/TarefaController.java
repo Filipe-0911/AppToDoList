@@ -2,6 +2,9 @@ package todo.list.api.App.domain.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +38,12 @@ public class TarefaController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<DadosListagemTarefaDTO>> listarTarefas(HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemTarefaDTO>> listarTarefas(@PageableDefault(size=10, page=0, sort = {"data"})Pageable pageable, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
         if (id != null) {
-            return tarefaService.buscaTarefasUsuario(id);
+            Page<DadosListagemTarefaDTO> tarefas = tarefaRepository.findAllByUsuarioId(pageable, id)
+                    .map(DadosListagemTarefaDTO::new);
+            return ResponseEntity.ok(tarefas);
         }
         return null;
     }
