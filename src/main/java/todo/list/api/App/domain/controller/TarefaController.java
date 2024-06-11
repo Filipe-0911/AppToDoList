@@ -5,33 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import todo.list.api.App.domain.dto.tarefa.DadosCriacaoTarefasDTO;
 import todo.list.api.App.domain.dto.tarefa.DadosDetalhamentoTarefaDTO;
 import todo.list.api.App.domain.dto.tarefa.DadosListagemTarefaDTO;
-import todo.list.api.App.domain.model.Tarefa;
 import todo.list.api.App.domain.repository.TarefaRepository;
-import todo.list.api.App.domain.repository.UsuarioRepository;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.services.TarefaService;
 import todo.list.api.App.domain.services.UsuarioService;
-import todo.list.api.App.infra.security.TokenService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tarefas")
 public class TarefaController {
     @Autowired
     private TarefaRepository tarefaRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private TokenService tokenService;
     @Autowired
     private TarefaService tarefaService;
     @Autowired

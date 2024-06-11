@@ -10,10 +10,8 @@ import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
 import todo.list.api.App.domain.dto.usuario.DadosUsuarioDTO;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.UsuarioRepository;
-import todo.list.api.App.domain.services.GetIdFromTokenString;
 
 import todo.list.api.App.domain.services.UsuarioService;
-import todo.list.api.App.infra.security.TokenService;
 
 @RestController
 @RequestMapping("/usuario")
@@ -21,10 +19,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository repository;
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private GetIdFromTokenString getIdFromTokenString;
     @Autowired
     private UsuarioService usuarioService;
 

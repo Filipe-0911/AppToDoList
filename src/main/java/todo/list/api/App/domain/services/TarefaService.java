@@ -1,7 +1,6 @@
 package todo.list.api.App.domain.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import todo.list.api.App.domain.model.Tarefa;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.TarefaRepository;
 import todo.list.api.App.domain.repository.UsuarioRepository;
-import todo.list.api.App.infra.exception.TratadorDeErros;
 
 import java.util.List;
 
@@ -22,8 +20,6 @@ public class TarefaService {
     private TarefaRepository tarefaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private TratadorDeErros tratadorDeErros;
 
     public DadosListagemTarefaDTO isCompleted(Tarefa tarefa) {
         if (!tarefa.isConcluido()) {
