@@ -36,6 +36,7 @@ public class TarefaController {
         }
         return null;
     }
+    
     @GetMapping("/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> obterDadosTarefaEspecifica(@PathVariable Long idTarefa, HttpServletRequest request) {
         Long idUsuario = usuarioService.buscaUsuario(request).getId();
