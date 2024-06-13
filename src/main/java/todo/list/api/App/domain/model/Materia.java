@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
 
 @Table(name = "materias")
 @Entity(name = "Materia")
@@ -36,8 +37,16 @@ public class Materia {
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Questao> listaQuestoes = new ArrayList<>();
 
+    public Materia(DadosCriacaoMateriaDTO dadosMateria) {
+        this.nome = dadosMateria.nome();
+    }
+
     public void setQuestoes(Questao questao) {
         this.listaQuestoes.add(questao);
+    }
+
+    public void setProva(Prova prova) {
+        this.prova = prova;
     }
     
     
