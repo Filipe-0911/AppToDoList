@@ -1,7 +1,5 @@
 package todo.list.api.App.domain.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,57 +18,32 @@ import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.prova.DadosCriacaoProvaDTO;
 import todo.list.api.App.domain.dto.prova.DadosDetalhamentoProvaDTO;
 import todo.list.api.App.domain.dto.prova.DadosListagemProvaDTO;
-import todo.list.api.App.domain.model.Prova;
-import todo.list.api.App.domain.model.Usuario;
-import todo.list.api.App.domain.repository.ProvaRepository;
-import todo.list.api.App.domain.services.UsuarioService;
+import todo.list.api.App.domain.services.ProvaService;
 
 @RestController
 @RequestMapping("/provas")
 public class ProvaController {
     @Autowired
-    private ProvaRepository provaRepository;
-    @Autowired
-    private UsuarioService usuarioService;
+    private ProvaService provaService;
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemProvaDTO>> getProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
-        Long id = usuarioService.buscaUsuario(request).getId();
-        if (id != null) {
-            Page<DadosListagemProvaDTO> listaDeProvas = provaRepository.findAllByUsuarioId(pageable, id)
-                .map(DadosListagemProvaDTO::new);
-
-            return ResponseEntity.ok(listaDeProvas);
-        }
-        return null;
+    public ResponseEntity<Page<DadosDetalhamentoProvaDTO>> getProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+        return provaService.buscarProvas(pageable, request);
     }
 
     @GetMapping("/{idProva}")
-    public ResponseEntity<DadosDetalhamentoProvaDTO> getProva(@PathVariable Long idProva, HttpServletRequest request) {
-        Usuario usuario = usuarioService.buscaUsuario(request);
-        Prova prova = provaRepository.getReferenceById(idProva);
-        List<Prova> listaProvasUsuario = usuario.getProvas().stream()
-            .filter(p -> p.equals(prova))
-            .toList();
-
-        if (listaProvasUsuario.contains(prova)) {
-            return ResponseEntity.ok(new DadosDetalhamentoProvaDTO(prova));
-        }
-        return null;
+    public ResponseEntity<DadosListagemProvaDTO> getProva(@PathVariable Long idProva, HttpServletRequest request) {
+        return provaService.buscaProvaEspecifica(idProva, request);
 
     }
 
     @Transactional
     @PostMapping
-    public ResponseEntity<DadosListagemProvaDTO> inserirProva(@RequestBody @Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) {
-        Usuario usuario = usuarioService.buscaUsuario(request);
-        Prova prova = new Prova(dadosProva);
-        prova.setUsuario(usuario);
-
-        usuario.setProvas(prova);
-
-        DadosListagemProvaDTO provaDto = new DadosListagemProvaDTO(prova);
-        return ResponseEntity.ok(provaDto);
+    public ResponseEntity<DadosListagemProvaDTO> inserirProva(
+        @RequestBody @Valid DadosCriacaoProvaDTO dadosProva, 
+        HttpServletRequest request) {
+        
+        return provaService.inserirProva(dadosProva, request);
     }
 
 }

@@ -27,7 +27,6 @@ import todo.list.api.App.domain.model.Questao;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.MateriaRepository;
 import todo.list.api.App.domain.repository.ProvaRepository;
-import todo.list.api.App.domain.repository.QuestaoRepository;
 import todo.list.api.App.domain.services.UsuarioService;
 
 @RestController
@@ -39,14 +38,13 @@ public class MateriasController {
     private MateriaRepository materiaRepository;
     @Autowired
     private ProvaRepository provaRepository;
-    @Autowired
-    private QuestaoRepository questaoRepository;
 
     @GetMapping("/{idProva}")
     public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (
         @PageableDefault(size=10, page=0, sort = {"nome"})Pageable pageable, 
         HttpServletRequest request,
         @PathVariable Long idProva) {
+
             Usuario usuario = usuarioService.buscaUsuario(request);
             List<Prova> listaDeProvas = usuario.getProvas();
             Prova provaBuscada = provaRepository.getReferenceById(idProva);
@@ -62,12 +60,14 @@ public class MateriasController {
 
     @Transactional
     @PostMapping("/{idProva}")
-    public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, HttpServletRequest request, @PathVariable Long idProva) {
-        Usuario usuario = usuarioService.buscaUsuario(request); 
-        List<Prova> listaDeProvas = usuario.getProvas();
+    public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(
+        @RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, 
+        @PathVariable Long idProva,
+        HttpServletRequest request) {
+
         Prova prova = provaRepository.getReferenceById(idProva);
 
-        if (listaDeProvas.contains(prova)) {
+        if (__estaProvaPertenceAEsteUsuario(request, idProva)) {
             Materia materia = new Materia(dadosMateria);
             materia.setProva(prova);
             prova.setListaDeMaterias(materia);
@@ -79,16 +79,16 @@ public class MateriasController {
 
     @Transactional
     @PostMapping("/{idProva}/questoes/{idMateria}")
-    public ResponseEntity<DadosListagemQuestoesDTO> adicionarQuestoes(@RequestBody @Valid DadosCriacaoQuestaoDTO dadosQuestao, @PathVariable Long idProva, @PathVariable Long idMateria, HttpServletRequest request) {
-
-        Usuario usuario = usuarioService.buscaUsuario(request);
-        List<Prova> listaDeProvas = usuario.getProvas();
-        Prova prova = provaRepository.getReferenceById(idProva);
+    public ResponseEntity<DadosListagemQuestoesDTO> adicionarQuestoes(
+        @RequestBody @Valid DadosCriacaoQuestaoDTO dadosQuestao, 
+        @PathVariable Long idProva, 
+        @PathVariable Long idMateria, 
+        HttpServletRequest request) {
 
         Materia materia = materiaRepository.getReferenceById(idMateria);
         Questao questao = new Questao(dadosQuestao);
 
-        if(listaDeProvas.contains(prova)) {
+        if(__estaProvaPertenceAEsteUsuario(request, idProva)) {
             materia.setQuestoes(questao);
             questao.setMateria(materia);
 
@@ -97,6 +97,13 @@ public class MateriasController {
         return null;
     }
 
+    private boolean __estaProvaPertenceAEsteUsuario(HttpServletRequest request, Long idProva) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        List<Prova> listaDeProvas = usuario.getProvas();
+        Prova prova = provaRepository.getReferenceById(idProva);
 
+        return listaDeProvas.contains(prova);
+         
+    }
 
 }
