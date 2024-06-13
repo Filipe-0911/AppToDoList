@@ -28,6 +28,8 @@ public class Materia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nome;
+
     @ManyToOne
     private Prova prova;
 
