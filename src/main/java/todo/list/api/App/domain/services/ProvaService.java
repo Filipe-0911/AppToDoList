@@ -61,4 +61,17 @@ public class ProvaService {
     private boolean __listaUsuarioContemProvaBuscada(List<Prova> listaProvas, Prova prova) {
         return listaProvas.stream().filter(p -> p.equals(prova)).toList().contains(prova);
     }
+
+    public ResponseEntity<Void> deletarProvaPeloId(HttpServletRequest request, Long idProva) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        Prova prova = provaRepository.getReferenceById(idProva);
+        if (__listaUsuarioContemProvaBuscada(usuario.getProvas(), prova)) {
+            provaRepository.delete(prova);
+            usuario.deleteProvas(prova);
+            
+            return ResponseEntity.noContent().build();
+        } 
+
+        return null;
+    }
 }
