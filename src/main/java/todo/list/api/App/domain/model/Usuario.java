@@ -30,6 +30,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Tarefa> tarefas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Prova> provas = new ArrayList<>();
+
     public Usuario(DadosCriacaoUsuarioDTO dados) {
         this.login = dados.login();
         this.nome = dados.nome();
@@ -73,5 +76,9 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setProvas(Prova prova) {
+        this.provas.add(prova);
     }
 }
