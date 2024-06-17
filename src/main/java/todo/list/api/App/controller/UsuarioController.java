@@ -1,4 +1,4 @@
-package todo.list.api.App.domain.controller;
+package todo.list.api.App.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

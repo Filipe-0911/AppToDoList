@@ -1,4 +1,4 @@
-package todo.list.api.App.domain.controller;
+package todo.list.api.App.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
