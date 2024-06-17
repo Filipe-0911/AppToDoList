@@ -30,7 +30,7 @@ public class ProvaController {
     private ProvaService provaService;
 
     @GetMapping
-    public ResponseEntity<Page<DadosDetalhamentoProvaDTO>> getProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosDetalhamentoProvaDTO>> getProvas(@PageableDefault(size=5, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
         return provaService.buscarProvas(pageable, request);
     }
 

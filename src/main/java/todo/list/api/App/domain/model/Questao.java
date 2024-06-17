@@ -34,7 +34,7 @@ public class Questao {
 
     @Setter
     @ManyToOne
-    private Materia materia;
+    private Assunto assunto;
 
     public void setQuestoesFeitas(int questoes) {
         this.questoesFeitas += questoes;

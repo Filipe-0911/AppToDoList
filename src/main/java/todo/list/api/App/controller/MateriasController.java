@@ -18,32 +18,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
 import todo.list.api.App.domain.services.MateriaService;
 
 @RestController
-@RequestMapping("/provas/materias")
+@RequestMapping("/materias")
 @SecurityRequirement(name =  "bearer-key")
 public class MateriasController {
     @Autowired
     private MateriaService materiaService;
 
     @GetMapping("/{idProva}")
-    public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (@PageableDefault(size=10, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idProva) {
-            return materiaService.buscaMaterias(request, idProva, pageable);
+    public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idProva) {
+        return materiaService.buscaMaterias(request, idProva, pageable);
     }
 
     @Transactional
     @PostMapping("/{idProva}")
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, @PathVariable Long idProva, HttpServletRequest request) {
-            return materiaService.inserirMaterias(dadosMateria, idProva, request);
-    }
-
-    @Transactional
-    @PostMapping("/{idProva}/questoes/{idMateria}")
-    public ResponseEntity<DadosListagemQuestoesDTO> adicionarQuestoes(@RequestBody @Valid DadosCriacaoQuestaoDTO dadosQuestao, @PathVariable Long idProva, @PathVariable Long idMateria, HttpServletRequest request) {
-        return materiaService.adicionarQuestoes(dadosQuestao, idProva, idMateria, request);
+        return materiaService.inserirMaterias(dadosMateria, idProva, request);
     }
 
 }

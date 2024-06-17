@@ -16,38 +16,38 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
+import lombok.Setter;
+import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 
-@Table(name = "materias")
-@Entity(name = "Materia")
+@Table(name = "assuntos_materia")
+@Entity(name = "Assunto")
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Materia {
+public class Assunto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
+    private int quantidadePdf;
 
+    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Questao> listaDeQuestoes = new ArrayList<>();
+
+    @Setter
     @ManyToOne
-    private Prova prova;
+    private Materia materia;
 
-    @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Assunto> listaAssuntos = new ArrayList<>();
-
-    public Materia(DadosCriacaoMateriaDTO dadosMateria) {
-        this.nome = dadosMateria.nome();
+    public Assunto(DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO) {
+        this.nome = dadosCriacaoAsssuntoDTO.nome();
+        this.quantidadePdf = dadosCriacaoAsssuntoDTO.quantidadePdf();
     }
 
-    public void setAssunto(Assunto assunto) {
-        this.listaAssuntos.add(assunto);
+    public void setQuestoes(Questao questao) {
+        this.listaDeQuestoes.add(questao);
     }
 
-    public void setProva(Prova prova) {
-        this.prova = prova;
-    }
-    
-    
 }

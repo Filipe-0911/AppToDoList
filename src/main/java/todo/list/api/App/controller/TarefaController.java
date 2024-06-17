@@ -29,7 +29,7 @@ public class TarefaController {
     private TarefaService tarefaService;
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemTarefaDTO>> listarTarefas(@PageableDefault(size=10, page=0, sort = {"data"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemTarefaDTO>> listarTarefas(@PageableDefault(size=5, page=0, sort = {"data"})Pageable pageable, HttpServletRequest request) {
         return tarefaService.listarTarefas(pageable, request);
     }
     
