@@ -20,14 +20,14 @@ import todo.list.api.App.domain.services.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")
-@SecurityRequirement(name =  "bearer-key")
 public class UsuarioController {
-
+    
     @Autowired
     private UsuarioRepository repository;
     @Autowired
     private UsuarioService usuarioService;
-
+    
+    @SecurityRequirement(name =  "bearer-key")
     @GetMapping
     public ResponseEntity<DadosUsuarioDTO> retornaDadosUsuario(HttpServletRequest httpServletRequest) {
         Usuario usuarioBuscado = usuarioService.buscaUsuario(httpServletRequest);

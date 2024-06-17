@@ -11,6 +11,33 @@ Além disso, ainda pode inserir a quantidade de questões que fez/acertou em det
 
 ## Endpoints
 
+### `/usuario/addUser`
+
+#### `POST`
+
+Cria um novo usuário.
+
+- **Operation ID:** `criarUsuario`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+        {
+            "login":"fulano@xpto.com",
+            "nome":"Fulano de Tal",
+            "senha":"123456"
+        }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+        {
+            "id": 1,
+            "login": "fulano@xpto.com",
+            "nome": "Fulano de Tal"
+        }
+      ```
+
 ### `/login`
 
 #### `POST`
@@ -22,16 +49,17 @@ Realiza a autenticação do usuário.
   - Conteúdo:
     ```json
     {
-      "$ref": "#/components/schemas/DadosAutenticacaoDTO"
+        "login":"fulano@xpto.com",
+        "senha":"123456"
     }
     ```
 - **Respostas:**
   - `200 OK`
     - Schema:
       ```json
-      {
-        "type": "object"
-      }
+        {
+            "tokenJWT": "token JWT"
+        }
       ```
 
 ### `/tarefas/{idTarefa}`
@@ -99,30 +127,6 @@ Marca uma tarefa como concluída.
 - **Segurança:**
   - Necessita token JWT (`bearer-key`).
 
-### `/usuario/addUser`
-
-#### `POST`
-
-Cria um novo usuário.
-
-- **Operation ID:** `criarUsuario`
-- **Corpo da requisição:**
-  - Conteúdo:
-    ```json
-    {
-      "$ref": "#/components/schemas/DadosCriacaoUsuarioDTO"
-    }
-    ```
-- **Respostas:**
-  - `200 OK`
-    - Schema:
-      ```json
-      {
-        "$ref": "#/components/schemas/DadosUsuarioDTO"
-      }
-      ```
-- **Segurança:**
-  - Necessita token JWT (`bearer-key`).
 
 ### `/tarefas`
 
