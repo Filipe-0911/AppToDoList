@@ -1,9 +1,15 @@
 package todo.list.api.App.domain.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
 import todo.list.api.App.domain.dto.tarefa.DadosCriacaoTarefasDTO;
 import todo.list.api.App.domain.dto.tarefa.DadosDetalhamentoTarefaDTO;
 import todo.list.api.App.domain.dto.tarefa.DadosListagemTarefaDTO;
@@ -12,14 +18,14 @@ import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.TarefaRepository;
 import todo.list.api.App.domain.repository.UsuarioRepository;
 
-import java.util.List;
-
 @Service
 public class TarefaService {
     @Autowired
     private TarefaRepository tarefaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioService usuarioService;
 
     public DadosListagemTarefaDTO isCompleted(Tarefa tarefa) {
         if (!tarefa.isConcluido()) {
@@ -38,8 +44,9 @@ public class TarefaService {
         return ResponseEntity.ok(listaTarefas);
 
     }
-
-    public ResponseEntity<DadosDetalhamentoTarefaDTO> criarTarefa (DadosCriacaoTarefasDTO dadosTarefa, Long id) {
+    public ResponseEntity<DadosDetalhamentoTarefaDTO> criarTarefa (DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
+        Long id = usuarioService.buscaUsuario(request).getId();
+        
         if (id != null) {
             Usuario usuario = usuarioRepository.getReferenceById(id);
             Tarefa tarefa = new Tarefa(dadosTarefa);
@@ -54,8 +61,9 @@ public class TarefaService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<DadosDetalhamentoTarefaDTO> concluirTarefa(Long id, Usuario usuario) {
+    public ResponseEntity<DadosDetalhamentoTarefaDTO> concluirTarefa(Long id, HttpServletRequest request) {
         Tarefa tarefaParaFinalizar = tarefaRepository.getReferenceById(id);
+        Usuario usuario = usuarioService.buscaUsuario(request);
 
         if (tarefaParaFinalizar.getUsuario().equals(usuario)) {
             tarefaParaFinalizar.setConcluido(true);
@@ -64,17 +72,34 @@ public class TarefaService {
 
     }
 
-    public ResponseEntity<DadosDetalhamentoTarefaDTO> getTarefaEspecifica(Long idUsuario, Long idTarefa) {
+    public ResponseEntity<DadosDetalhamentoTarefaDTO> getTarefaEspecifica(HttpServletRequest request, Long idTarefa) {
         Tarefa tarefaEspecifica = tarefaRepository.getReferenceById(idTarefa);
-        Usuario usuario = usuarioRepository.getReferenceById(idUsuario);
+        Usuario usuario = usuarioService.buscaUsuario(request);
+
         if (tarefaEspecifica.getUsuario().equals(usuario)) {
             return ResponseEntity.ok(new DadosDetalhamentoTarefaDTO(tarefaEspecifica));
         } else return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<DadosDetalhamentoTarefaDTO> atualizarInformacoes(Long idTarefa, DadosCriacaoTarefasDTO alteracao, Usuario usuario) {
+    public ResponseEntity<DadosDetalhamentoTarefaDTO> atualizarInformacoes(Long idTarefa, DadosCriacaoTarefasDTO alteracao, HttpServletRequest request) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
         Tarefa tarefaEspecifica = tarefaRepository.getReferenceById(idTarefa);
-        tarefaEspecifica.atualizarInformacoes(alteracao);
-        return ResponseEntity.ok(new DadosDetalhamentoTarefaDTO(tarefaEspecifica));
+        
+        if (usuario.getTarefas().contains(tarefaEspecifica)) {
+            tarefaEspecifica.atualizarInformacoes(alteracao);
+            return ResponseEntity.ok(new DadosDetalhamentoTarefaDTO(tarefaEspecifica));
+        }
+
+        return null;
+    }
+
+    public ResponseEntity<Page<DadosListagemTarefaDTO>> listarTarefas(Pageable pageable, HttpServletRequest request) {
+        Long id = usuarioService.buscaUsuario(request).getId();
+        if (id != null) {
+            Page<DadosListagemTarefaDTO> tarefas = tarefaRepository.findAllByUsuarioId(pageable, id)
+                    .map(DadosListagemTarefaDTO::new);
+            return ResponseEntity.ok(tarefas);
+        }
+        return null;
     }
 }
