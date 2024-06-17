@@ -1,12 +1,38 @@
 # To-do List e monitoramento de estudo API
 
-API Restful para monitoramento de estudo e criação de tarefas.
+API Restful para monitoramento de estudo e criação de tarefas. Nela você pode inserir provas que você irá fazer e as respectivas matérias.
+Além disso, ainda pode inserir a quantidade de questões que fez/acertou em determinado dia para que possa acompanhar seu desempenho no decorrer do tempo.
 
 **Contato:** Dev Filipe  
 **Email:** fbianchi.andrade@gmail.com  
 **Licença:** [Apache 2.0](http://to-do.list/api/licenca)
 
+**Antes de tudo, faça o login, pegue o token JWT retornado e insira no cabeçalho das requisições com a chave "Authorization"!**
+
 ## Endpoints
+
+### `/login`
+
+#### `POST`
+
+Realiza a autenticação do usuário.
+
+- **Operation ID:** `efetuarLogin`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosAutenticacaoDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "type": "object"
+      }
+      ```
 
 ### `/tarefas/{idTarefa}`
 
@@ -257,29 +283,6 @@ Adiciona questões a uma matéria de uma prova.
       ```
 - **Segurança:**
   - Necessita token JWT (`bearer-key`).
-
-### `/login`
-
-#### `POST`
-
-Realiza a autenticação do usuário.
-
-- **Operation ID:** `efetuarLogin`
-- **Corpo da requisição:**
-  - Conteúdo:
-    ```json
-    {
-      "$ref": "#/components/schemas/DadosAutenticacaoDTO"
-    }
-    ```
-- **Respostas:**
-  - `200 OK`
-    - Schema:
-      ```json
-      {
-        "type": "object"
-      }
-      ```
 
 ### `/usuario`
 
