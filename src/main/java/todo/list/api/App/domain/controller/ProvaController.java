@@ -35,7 +35,6 @@ public class ProvaController {
     @GetMapping("/{idProva}")
     public ResponseEntity<DadosListagemProvaDTO> getProva(@PathVariable Long idProva, HttpServletRequest request) {
         return provaService.buscaProvaEspecifica(idProva, request);
-
     }
 
     @Transactional
