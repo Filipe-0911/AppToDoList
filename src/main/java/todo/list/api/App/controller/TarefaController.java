@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import todo.list.api.App.domain.dto.tarefa.DadosCriacaoTarefasDTO;
 import todo.list.api.App.domain.dto.tarefa.DadosDetalhamentoTarefaDTO;
@@ -22,6 +23,7 @@ import todo.list.api.App.domain.services.TarefaService;
 
 @RestController
 @RequestMapping("/tarefas")
+@SecurityRequirement(name =  "bearer-key")
 public class TarefaController {
     @Autowired
     private TarefaService tarefaService;

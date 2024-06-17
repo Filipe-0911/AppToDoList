@@ -1,72 +1,332 @@
-# API To do List
+# To-do List e monitoramento de estudo API
 
-Projeto desenvolvido em Java utilizando o Framework Spring.
+API Restful para monitoramento de estudo e criação de tarefas.
 
-## Objetivos do projeto:
- - Possibilitar Criação de Tarefas com prazo para término para cada usuário;
- - Treinar autenticação com JWT;
- - Criar um CRUD para Tarefas e Usuários em que cada usuário tem sua lista de tarefas;
+**Contato:** Dev Filipe  
+**Email:** fbianchi.andrade@gmail.com  
+**Licença:** [Apache 2.0](http://to-do.list/api/licenca)
 
-## Como utilizar:
+## Endpoints
 
-O projeto foi desenvolvido com variáveis de ambiente salvas em um arquivo .env.
-No arquivo application.properties estão os nomes que as variáveis devem ser salvas neste arquivo:
+### `/tarefas/{idTarefa}`
 
-```commandline
-spring.datasource.url=jdbc:mysql://${DB_HOST_PORT}/to_do_list
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
-```
+#### `GET`
 
-# Rotas e suas utilizações
+Retorna os dados de uma tarefa específica.
 
-## Criando um usuário 
-## POST '/usuario/addUser'
-Primeiro você deve criar um usuário na rota POST '/usuario/addUser' com as seguintes informações: 
-```commandline
-{
-    "nome":"digite o seu nome",
-    "login":"digite seu login",
-    "senha":"digite sua senha"
-}
-```
+- **Operation ID:** `obterDadosTarefaEspecifica`
+- **Parâmetros:**
+  - `idTarefa` (path) - ID da tarefa a ser obtida (integer, int64)
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosDetalhamentoTarefaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
 
-## GET '/usuario'
-Retorna os dados do usuário que está logado. Esta verificação é feita através do Token JWT inserido no Header.
+#### `PUT`
 
-## POST '/login'
-Após a criação do usuário, vá até a rota '/login' utilize o metodo post para realizar o login:
-```commandline
-{
-    "login": "usuario",
-    "senha": "senha"
-}
-```
-Esta operação te retornará um token JWT que deverá ser adicionaro ao Header com a chave 'Authorization'.
+Altera os dados de uma tarefa específica.
 
-## '/tarefas'
-### POST '/tarefas' contendo as seguintes informações:
+- **Operation ID:** `alterarTarefa`
+- **Parâmetros:**
+  - `idTarefa` (path) - ID da tarefa a ser alterada (integer, int64)
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoTarefasDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosDetalhamentoTarefaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
 
-```commandline
-{
-    "titulo":"Titulo da tarefa",
-    "descricao":"Descrição da tarefa",
-    "data":"dd/MM/yyyy"
-}
-```
+### `/tarefas/concluir/{idTarefa}`
 
-### GET '/tarefas'
-Obtem todas as tarefas do seu usuário;
-<br>
+#### `PUT`
 
-## '/tarefas/{idTarefa}'
-### GET
-Para visualizar uma tarefa específica, inclua o ID da tarefa na rota '/tarefas', ou seja, ficará assim: '/tarefas/id' em que id é o número do id desta tarefa.
+Marca uma tarefa como concluída.
 
-### PUT
-Altera alguma informação em alguma tarefa específica.
+- **Operation ID:** `concluirTarefa`
+- **Parâmetros:**
+  - `idTarefa` (path) - ID da tarefa a ser concluída (integer, int64)
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosDetalhamentoTarefaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
 
-## '/tarefas/concluir/{idTarefa}'
-Determina que a tarefa está concluída.
+### `/usuario/addUser`
 
+#### `POST`
 
+Cria um novo usuário.
+
+- **Operation ID:** `criarUsuario`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoUsuarioDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosUsuarioDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/tarefas`
+
+#### `GET`
+
+Lista todas as tarefas paginadas.
+
+- **Operation ID:** `listarTarefas`
+- **Parâmetros:**
+  - `pageable` (query) - Configuração de paginação
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/PageDadosListagemTarefaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+#### `POST`
+
+Cria uma nova tarefa.
+
+- **Operation ID:** `inserirTarefa`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoTarefasDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosDetalhamentoTarefaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/provas`
+
+#### `GET`
+
+Lista todas as provas paginadas.
+
+- **Operation ID:** `getProvas`
+- **Parâmetros:**
+  - `pageable` (query) - Configuração de paginação
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/PageDadosDetalhamentoProvaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+#### `POST`
+
+Cria uma nova prova.
+
+- **Operation ID:** `inserirProva`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoProvaDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosListagemProvaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/provas/materias/{idProva}`
+
+#### `GET`
+
+Lista todas as matérias de uma prova paginadas.
+
+- **Operation ID:** `getMaterias`
+- **Parâmetros:**
+  - `pageable` (query) - Configuração de paginação
+  - `idProva` (path) - ID da prova (integer, int64)
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/PageDadosListagemMateriaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+#### `POST`
+
+Adiciona uma nova matéria a uma prova.
+
+- **Operation ID:** `inserirMaterias`
+- **Parâmetros:**
+  - `idProva` (path) - ID da prova (integer, int64)
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoMateriaDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosListagemMateriaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/provas/materias/{idProva}/questoes/{idMateria}`
+
+#### `POST`
+
+Adiciona questões a uma matéria de uma prova.
+
+- **Operation ID:** `adicionarQuestoes`
+- **Parâmetros:**
+  - `idProva` (path) - ID da prova (integer, int64)
+  - `idMateria` (path) - ID da matéria (integer, int64)
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosCriacaoQuestaoDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosListagemQuestoesDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/login`
+
+#### `POST`
+
+Realiza a autenticação do usuário.
+
+- **Operation ID:** `efetuarLogin`
+- **Corpo da requisição:**
+  - Conteúdo:
+    ```json
+    {
+      "$ref": "#/components/schemas/DadosAutenticacaoDTO"
+    }
+    ```
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "type": "object"
+      }
+      ```
+
+### `/usuario`
+
+#### `GET`
+
+Retorna os dados do usuário autenticado.
+
+- **Operation ID:** `retornaDadosUsuario`
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosUsuarioDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+### `/provas/{idProva}`
+
+#### `GET`
+
+Retorna os detalhes de uma prova específica.
+
+- **Operation ID:** `getProva`
+- **Parâmetros:**
+  - `idProva` (path) - ID da prova a ser obtida (integer, int64)
+- **Respostas:**
+  - `200 OK`
+    - Schema:
+      ```json
+      {
+        "$ref": "#/components/schemas/DadosListagemProvaDTO"
+      }
+      ```
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).
+
+#### `DELETE`
+
+Deleta uma prova específica.
+
+- **Operation ID:** `deletarProva`
+- **Parâmetros:**
+  - `idProva` (path) - ID da prova a ser deletada (integer, int64)
+- **Respostas:**
+  - `200 OK`
+- **Segurança:**
+  - Necessita token JWT (`bearer-key`).

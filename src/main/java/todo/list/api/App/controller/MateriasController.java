@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
@@ -23,6 +24,7 @@ import todo.list.api.App.domain.services.MateriaService;
 
 @RestController
 @RequestMapping("/provas/materias")
+@SecurityRequirement(name =  "bearer-key")
 public class MateriasController {
     @Autowired
     private MateriaService materiaService;
