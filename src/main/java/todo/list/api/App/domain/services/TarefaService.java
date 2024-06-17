@@ -38,6 +38,7 @@ public class TarefaService {
         }
         return null;
     }
+
     public ResponseEntity<DadosDetalhamentoTarefaDTO> criarTarefa (DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
         
@@ -46,12 +47,9 @@ public class TarefaService {
             Tarefa tarefa = new Tarefa(dadosTarefa);
             tarefa.setUsuario(usuario);
             usuario.setTarefas(tarefa);
-
             DadosDetalhamentoTarefaDTO tarefasDTO =  new DadosDetalhamentoTarefaDTO(tarefa.getTitulo(), tarefa.getDescricao(), tarefa.getData().toString(), false);
-
             return ResponseEntity.ok(tarefasDTO);
         }
-
         return ResponseEntity.badRequest().build();
     }
 
