@@ -18,10 +18,8 @@ import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
-import todo.list.api.App.domain.model.Questao;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.AssuntoRepository;
-import todo.list.api.App.domain.repository.QuestaoRepository;
 
 @Service
 public class AssuntoService {
@@ -33,7 +31,7 @@ public class AssuntoService {
     @Autowired
     private MateriaService materiaService;
     @Autowired
-    private QuestaoRepository questaoRepository;
+    private QuestaoService questaoService;
 
     public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscaAssuntos(@PageableDefault(size = 5, page = 0, sort = {"nome"}) Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
         boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
@@ -71,20 +69,17 @@ public class AssuntoService {
 
     }
 
-    public ResponseEntity<Page<DadosListagemQuestoesDTO>> criarQuestoes(
-            @PathVariable Long idMateria,
-            @PathVariable Long idAssunto,
-            HttpServletRequest request,
-            @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+    public ResponseEntity<DadosListagemQuestoesDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+
         boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
         if (materiaPertenceAUsuario) {
-            Questao questao = new Questao(dadosCriacaoQuestaoDTO);
             Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
-            assunto.setQuestoes(questao);
-            questao.setAssunto(assunto);
-            questaoRepository.save(questao);
+
+            return questaoService.criarQuestao(dadosCriacaoQuestaoDTO, assunto);
+            
         }
         return null;
+
     }
 
     public ResponseEntity<Void> deletarAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
@@ -100,6 +95,11 @@ public class AssuntoService {
         }
         return null;
     }
+
+    public Assunto buscarAssuntoEspecificoSemParametrosDePath(Long id) {
+        return assuntoRepository.getReferenceById(id);
+    }
+
 
     private boolean __verificaSeMateriaPertenceAUsuario(HttpServletRequest request, Long idMateria) {
         Usuario usuario = usuarioService.buscaUsuario(request);

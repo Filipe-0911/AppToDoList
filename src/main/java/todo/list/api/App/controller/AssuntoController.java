@@ -48,7 +48,7 @@ public class AssuntoController {
     }
     @Transactional
     @PostMapping("{idMateria}/{idAssunto}")
-    public ResponseEntity<Page<DadosListagemQuestoesDTO>> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+    public ResponseEntity<DadosListagemQuestoesDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
         return assuntoService.criarQuestoes(idMateria, idAssunto, request, dadosCriacaoQuestaoDTO);
     }
 
