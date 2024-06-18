@@ -30,8 +30,9 @@ public class Assunto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Setter
     private String nome;
+    @Setter
     private int quantidadePdf;
 
     @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

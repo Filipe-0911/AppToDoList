@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
@@ -106,5 +107,23 @@ public class AssuntoService {
         Materia materia = materiaService.buscaMateriaEspecifica(idMateria);
 
         return usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia);
+    }
+
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> atualizaAssunto(Long idMateria, Long idAssunto, HttpServletRequest request, DadosAlteracaoAssuntoDTO dadosAlteracaoAssuntoDTO) {
+        boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
+
+        if(materiaPertenceAUsuario) {
+            Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
+
+            if (dadosAlteracaoAssuntoDTO.nome() != null) {
+                assunto.setNome(dadosAlteracaoAssuntoDTO.nome());
+            }
+            if (dadosAlteracaoAssuntoDTO.quantidadeDePdf() != 0) {
+                assunto.setQuantidadePdf(dadosAlteracaoAssuntoDTO.quantidadeDePdf());
+            }
+
+            return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
+        }
+        return null;
     }
 }

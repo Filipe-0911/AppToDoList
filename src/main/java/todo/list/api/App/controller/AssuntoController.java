@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
@@ -56,6 +58,11 @@ public class AssuntoController {
     @DeleteMapping("{idMateria}/{idAssunto}")
     public ResponseEntity<Void> deletarAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.deletarAssunto(idMateria, idAssunto, request);
+    }
+    @Transactional
+    @PutMapping("{idMateria}/{idAssunto}")
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> atualizaAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosAlteracaoAssuntoDTO dadosAlteracaoAssuntoDTO, HttpServletRequest request) {
+        return assuntoService.atualizaAssunto(idMateria, idAssunto, request, dadosAlteracaoAssuntoDTO);
     }
 
 }
