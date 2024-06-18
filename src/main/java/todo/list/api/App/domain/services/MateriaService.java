@@ -50,6 +50,10 @@ public class MateriaService {
         }
         return null;
     }
+    
+    public Materia buscaMateriaEspecifica(Long id) {
+        return materiaRepository.getReferenceById(id);
+    }
 
     private boolean __estaProvaPertenceAEsteUsuario(HttpServletRequest request, Long idProva) {
         Usuario usuario = usuarioService.buscaUsuario(request);

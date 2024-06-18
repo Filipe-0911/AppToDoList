@@ -2,6 +2,7 @@ package todo.list.api.App.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -47,6 +48,12 @@ public class Materia {
 
     public void setProva(Prova prova) {
         this.prova = prova;
+    }
+
+    public void deleteAssunto(Assunto assunto) {
+        this.listaAssuntos = listaAssuntos.stream()
+            .filter(a -> !Objects.equals(a.getId(), assunto.getId()))
+            .toList();
     }
     
     
