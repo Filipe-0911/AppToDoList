@@ -46,6 +46,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Prova> provas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PlanejadorEstudos> planejadorEstudos = new ArrayList<>();
+
     public Usuario(DadosCriacaoUsuarioDTO dados) {
         this.login = dados.login();
         this.nome = dados.nome();
@@ -94,6 +97,11 @@ public class Usuario implements UserDetails {
     public void setProvas(Prova prova) {
         this.provas.add(prova);
     }
+
+    public void setPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {
+        this.planejadorEstudos.add(planejadorEstudos);
+    }
+    
     public void deleteProvas(Prova prova) {
         this.provas = provas.stream()
             .filter(p -> !Objects.equals(p.getId(), prova.getId()))
