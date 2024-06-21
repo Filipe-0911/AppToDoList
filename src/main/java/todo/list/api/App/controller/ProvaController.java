@@ -30,12 +30,12 @@ public class ProvaController {
     private ProvaService provaService;
 
     @GetMapping
-    public ResponseEntity<Page<DadosDetalhamentoProvaDTO>> getProvas(@PageableDefault(size=5, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemProvaDTO>> getProvas(@PageableDefault(size=5, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
         return provaService.buscarProvas(pageable, request);
     }
 
     @GetMapping("/{idProva}")
-    public ResponseEntity<DadosListagemProvaDTO> getProva(@PathVariable Long idProva, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoProvaDTO> getProvaEspecifica(@PathVariable Long idProva, HttpServletRequest request) {
         return provaService.buscaProvaEspecifica(idProva, request);
     }
 

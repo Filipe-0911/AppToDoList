@@ -2,14 +2,13 @@ package todo.list.api.App.domain.dto.assunto;
 
 import java.util.List;
 
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
 import todo.list.api.App.domain.model.Assunto;
 
 public record DadosDetalhamentoAssuntoDTO(
     Long id,
     String nome,
     int quantidadePdf,
-    List<DadosListagemQuestoesDTO> listaQuestoes
+    List<Long> idQuestoes
 ) {
 
     public DadosDetalhamentoAssuntoDTO(Assunto assunto) {
@@ -19,7 +18,7 @@ public record DadosDetalhamentoAssuntoDTO(
             assunto.getQuantidadePdf(),
             assunto.getListaDeQuestoes()
                 .stream()
-                    .map(DadosListagemQuestoesDTO::new)
+                    .map(q -> q.getId())
                     .toList()
         );
     }

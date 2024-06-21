@@ -27,7 +27,7 @@ public class MateriasController {
     @Autowired
     private MateriaService materiaService;
 
-    @GetMapping("/{idProva}")
+    @GetMapping("/prova/{idProva}")
     public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idProva) {
         return materiaService.buscaMaterias(request, idProva, pageable);
     }

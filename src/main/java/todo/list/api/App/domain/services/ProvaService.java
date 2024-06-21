@@ -25,11 +25,11 @@ public class ProvaService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public ResponseEntity<Page<DadosDetalhamentoProvaDTO>> buscarProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemProvaDTO>> buscarProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
         if (id != null) {
-            Page<DadosDetalhamentoProvaDTO> listaDeProvas = provaRepository.findAllByUsuarioId(pageable, id)
-                .map(DadosDetalhamentoProvaDTO::new);
+            Page<DadosListagemProvaDTO> listaDeProvas = provaRepository.findAllByUsuarioId(pageable, id)
+                .map(DadosListagemProvaDTO::new);
 
             return ResponseEntity.ok(listaDeProvas);
         }
@@ -48,12 +48,12 @@ public class ProvaService {
         return ResponseEntity.ok(provaDto);
     }
 
-    public ResponseEntity<DadosListagemProvaDTO> buscaProvaEspecifica(Long idProva, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoProvaDTO> buscaProvaEspecifica(Long idProva, HttpServletRequest request) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         Prova prova = provaRepository.getReferenceById(idProva);
 
         if (__listaUsuarioContemProvaBuscada(usuario.getProvas(), prova)) {
-            return ResponseEntity.ok(new DadosListagemProvaDTO(prova));
+            return ResponseEntity.ok(new DadosDetalhamentoProvaDTO(prova));
         }
         return null;
     }
