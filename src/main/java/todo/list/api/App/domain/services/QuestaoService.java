@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoesDTO;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
+import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Prova;
@@ -34,21 +36,21 @@ public class QuestaoService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public ResponseEntity<DadosListagemQuestoesDTO> criarQuestao(DadosCriacaoQuestaoDTO questao, Assunto assunto) {
+    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestao(DadosCriacaoQuestaoDTO questao, Assunto assunto) {
         Questao questaoBuscada = questaoRepository.findByDataPreenchimentoAndAssuntoId(questao.dataPreenchimento(), assunto.getId());
 
         if (questaoBuscada != null && assunto.getId().equals(questaoBuscada.getAssunto().getId())) {
             System.out.println("teste");
             questaoBuscada.setQuestoesAcertadas(questao.questoesAcertadas());
             questaoBuscada.setQuestoesFeitas(questao.questoesFeitas());
-            return ResponseEntity.ok(new DadosListagemQuestoesDTO(questaoBuscada));
+            return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questaoBuscada));
         }
         Questao questaoCriada = new Questao(questao);
         assunto.setQuestoes(questaoCriada);
         questaoCriada.setAssunto(assunto);
         questaoRepository.save(questaoCriada);
 
-        return ResponseEntity.ok(new DadosListagemQuestoesDTO(questaoCriada));
+        return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questaoCriada));
     }
 
     public ResponseEntity<Page<DadosDetalhamentoMediaQuestoesDTO>> buscaDadosMediaQuestoes(@PageableDefault(size = 5, page = 0, sort = {"nome"}) Pageable pageable, HttpServletRequest request, Long idProva) {

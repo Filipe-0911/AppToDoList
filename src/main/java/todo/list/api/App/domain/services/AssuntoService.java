@@ -16,7 +16,7 @@ import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
+import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Usuario;
@@ -70,7 +70,7 @@ public class AssuntoService {
 
     }
 
-    public ResponseEntity<DadosListagemQuestoesDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
 
         boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
         if (materiaPertenceAUsuario) {

@@ -23,7 +23,7 @@ import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
+import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.services.AssuntoService;
 
 @RestController
@@ -50,7 +50,7 @@ public class AssuntoController {
     }
     @Transactional
     @PostMapping("{idMateria}/{idAssunto}")
-    public ResponseEntity<DadosListagemQuestoesDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
         return assuntoService.criarQuestoes(idMateria, idAssunto, request, dadosCriacaoQuestaoDTO);
     }
 
