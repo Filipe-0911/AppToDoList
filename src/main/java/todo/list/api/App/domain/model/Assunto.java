@@ -42,6 +42,9 @@ public class Assunto {
     @ManyToOne
     private Materia materia;
 
+    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PlanejadorEstudos> listaPlanejadorEstudos = new ArrayList<>();
+
     public Assunto(DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO) {
         this.nome = dadosCriacaoAsssuntoDTO.nome();
         this.quantidadePdf = dadosCriacaoAsssuntoDTO.quantidadePdf();
@@ -49,6 +52,9 @@ public class Assunto {
 
     public void setQuestoes(Questao questao) {
         this.listaDeQuestoes.add(questao);
+    }
+    public void setPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {
+        this.listaPlanejadorEstudos.add(planejadorEstudos);
     }
 
 }

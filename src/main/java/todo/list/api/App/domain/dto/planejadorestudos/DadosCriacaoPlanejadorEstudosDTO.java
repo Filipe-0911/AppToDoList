@@ -10,7 +10,6 @@ public record DadosCriacaoPlanejadorEstudosDTO(
     @JsonAlias("data_inicio") 
     LocalDateTime dataInicio,
 
-    @NotNull
     @JsonAlias("assundo_id") 
     Long assuntoId,
 
@@ -18,7 +17,6 @@ public record DadosCriacaoPlanejadorEstudosDTO(
     @JsonAlias("data_termino")
     LocalDateTime dataTermino,
     
-    @NotNull
     @JsonAlias("usuario_id")
     Long usuarioId
 ) {
