@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosAlteracaoPlanejadorEstudosDTO;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosCriacaoPlanejadorEstudosDTO;
+import todo.list.api.App.domain.dto.planejadorestudos.DadosDetalhamentoPlanejadorEstudosDTO;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosListagemPlanejadorEstudosDTO;
 import todo.list.api.App.domain.services.PlanejadorEstudosService;
 
@@ -40,7 +41,7 @@ public class PlanejadorEstudosController {
     }
 
     @GetMapping("/especifico/{idPlanejador}")
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> buscaPlanejadorEspecifico(@PathVariable Long idPlanejador, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> buscaPlanejadorEspecifico(@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.buscaPlanejadorEspecifico(idPlanejador, request);
     }
 
@@ -52,13 +53,13 @@ public class PlanejadorEstudosController {
 
     @Transactional
     @PutMapping("/especifico/{idPlanejador}")
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> alteraPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request, @RequestBody DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> alteraPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request, @RequestBody DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         return planejadorEstudosService.alteraPlanejamento(idPlanejador, request, dadosAlteracaoPlanejadorEstudosDTO);
     }
 
     @Transactional
     @PutMapping("/especifico/cancelar/{idPlanejador}")
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> cancelaPlanejamentoEstudo (@PathVariable Long idPlanejador, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> cancelaPlanejamentoEstudo (@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.cancelarPlanejamentoEstudos(idPlanejador, request);
     }
 

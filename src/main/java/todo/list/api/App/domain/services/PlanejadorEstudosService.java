@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosAlteracaoPlanejadorEstudosDTO;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosCriacaoPlanejadorEstudosDTO;
+import todo.list.api.App.domain.dto.planejadorestudos.DadosDetalhamentoPlanejadorEstudosDTO;
 import todo.list.api.App.domain.dto.planejadorestudos.DadosListagemPlanejadorEstudosDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
@@ -30,7 +31,7 @@ public class PlanejadorEstudosService {
     @Autowired
     private AssuntoService assuntoService;
 
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> alteraPlanejamento(Long idPlanejador, HttpServletRequest request, DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> alteraPlanejamento(Long idPlanejador, HttpServletRequest request, DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         PlanejadorEstudos planejadorEstudos = planejadorEstudosRepository.getReferenceById(idPlanejador);
 
@@ -47,7 +48,7 @@ public class PlanejadorEstudosService {
                 Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(dadosAlteracaoPlanejadorEstudosDTO.idAssunto());
                 planejadorEstudos.setAssunto(assunto);
             }
-            return ResponseEntity.ok(new DadosListagemPlanejadorEstudosDTO(planejadorEstudos));
+            return ResponseEntity.ok(new DadosDetalhamentoPlanejadorEstudosDTO(planejadorEstudos));
 
         }
         return ResponseEntity.badRequest().build();
@@ -72,7 +73,7 @@ public class PlanejadorEstudosService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> buscaPlanejadorEspecifico(Long idPlanejador, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> buscaPlanejadorEspecifico(Long idPlanejador, HttpServletRequest request) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         PlanejadorEstudos planejadorEstudos = planejadorEstudosRepository.getReferenceById(idPlanejador);
         List<PlanejadorEstudos> listaPlanejadorEstudosUsuario = usuario.getPlanejadorEstudos();
@@ -80,7 +81,7 @@ public class PlanejadorEstudosService {
         boolean planejadorPertenceAUsuario = listaPlanejadorEstudosUsuario.contains(planejadorEstudos);
         if (planejadorPertenceAUsuario) {
 
-            return ResponseEntity.ok(new DadosListagemPlanejadorEstudosDTO(planejadorEstudos));
+            return ResponseEntity.ok(new DadosDetalhamentoPlanejadorEstudosDTO(planejadorEstudos));
         }
 
         return ResponseEntity.badRequest().build();
@@ -122,7 +123,7 @@ public class PlanejadorEstudosService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> cancelarPlanejamentoEstudos(Long idPlanejador, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> cancelarPlanejamentoEstudos(Long idPlanejador, HttpServletRequest request) {
         Usuario usuario = usuarioService.buscaUsuario(request);
 
         PlanejadorEstudos planejadorEstudos = planejadorEstudosRepository.getReferenceById(idPlanejador);

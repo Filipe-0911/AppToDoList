@@ -9,7 +9,6 @@ public record DadosListagemPlanejadorEstudosDTO(
         LocalDateTime dadaInicio,
         Long assuntoId,
         LocalDateTime dataTermino,
-        boolean cancelado,
         Long usuarioId) {
 
     public DadosListagemPlanejadorEstudosDTO(PlanejadorEstudos planejadorEstudos) {
@@ -17,7 +16,6 @@ public record DadosListagemPlanejadorEstudosDTO(
                 planejadorEstudos.getDataInicio(),
                 planejadorEstudos.getAssunto().getId(),
                 planejadorEstudos.getDataTermino(),
-                planejadorEstudos.isCancelado(),
                 new DadosUsuarioDTO(planejadorEstudos.getUsuario()).id()
             );
     }
