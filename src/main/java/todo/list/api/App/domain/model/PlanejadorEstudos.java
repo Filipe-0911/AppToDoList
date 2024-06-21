@@ -24,13 +24,16 @@ public class PlanejadorEstudos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+    @Setter
     private LocalDateTime dataInicio;
 
+    @Setter
     @ManyToOne
     private Assunto assunto;
-
+    @Setter
     private LocalDateTime dataTermino;
+    
+    @Setter
     private boolean cancelado;
 
     @Setter

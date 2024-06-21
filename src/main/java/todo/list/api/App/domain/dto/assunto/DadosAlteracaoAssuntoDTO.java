@@ -5,7 +5,7 @@ import io.micrometer.common.lang.Nullable;
 public record DadosAlteracaoAssuntoDTO(
     @Nullable
     String nome,
-    int quantidadeDePdf
+    int quantidadeDePdf 
 ) {
 
 }

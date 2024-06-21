@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
+import todo.list.api.App.domain.model.PlanejadorEstudos;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.UsuarioRepository;
@@ -49,6 +50,10 @@ public class UsuarioService {
     public boolean verificaSeAssuntoPertenceAUsuario(Usuario usuario, Assunto assunto) {
         List<Assunto> listaDeAssuntosUsuario = __pegaListaAssuntoUsuario(usuario);
         return listaDeAssuntosUsuario.contains(assunto);
+    }
+
+    public boolean verificaSePlanejadorEstudosPertenceAUsuario(Usuario usuario, PlanejadorEstudos planejadorEstudos) {
+        return usuario.getPlanejadorEstudos().contains(planejadorEstudos);
     }
 
     private List<Assunto> __pegaListaAssuntoUsuario(Usuario usuario) {

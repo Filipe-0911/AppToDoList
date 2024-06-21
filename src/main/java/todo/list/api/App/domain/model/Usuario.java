@@ -107,4 +107,9 @@ public class Usuario implements UserDetails {
             .filter(p -> !Objects.equals(p.getId(), prova.getId()))
             .toList();
     }
+    public void deletaPlanejamento(PlanejadorEstudos planejadorEstudos) {
+        this.planejadorEstudos = this.planejadorEstudos.stream()
+            .filter(pe -> !Objects.equals(pe.getId(), planejadorEstudos.getId()))
+            .toList();
+    }
 }
