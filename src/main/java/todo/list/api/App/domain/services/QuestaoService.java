@@ -12,11 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoesDTO;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Questao;
