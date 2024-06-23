@@ -27,40 +27,35 @@ import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.services.AssuntoService;
 
 @RestController
-@RequestMapping("/assuntos")
+@RequestMapping("provas/{idProva}/materias/{idMateria}/assuntos")
 @SecurityRequirement(name="bearer-key")
 public class AssuntoController {
     @Autowired
     private AssuntoService assuntoService;
 
-    @GetMapping("/{idMateria}")
+    @GetMapping
     public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscaAssuntos(@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.buscaAssuntos(pageable, request, idMateria);
     }
     @Transactional
-    @PostMapping("/{idMateria}")
+    @PostMapping
     public ResponseEntity<DadosListagemAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.criarAssunto(dadosCriacaoAsssuntoDTO, request, idMateria);
     }
 
-    @GetMapping("{idMateria}/{idAssunto}")
+    @GetMapping("/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> buscaAssuntoEspecifico(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.buscaAssuntoEspecifico(idMateria, idAssunto, request);
 
     }
-    @Transactional
-    @PostMapping("{idMateria}/{idAssunto}")
-    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
-        return assuntoService.criarQuestoes(idMateria, idAssunto, request, dadosCriacaoQuestaoDTO);
-    }
 
     @Transactional
-    @DeleteMapping("{idMateria}/{idAssunto}")
+    @DeleteMapping("/{idAssunto}")
     public ResponseEntity<Void> deletarAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.deletarAssunto(idMateria, idAssunto, request);
     }
     @Transactional
-    @PutMapping("{idMateria}/{idAssunto}")
+    @PutMapping("/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> atualizaAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosAlteracaoAssuntoDTO dadosAlteracaoAssuntoDTO, HttpServletRequest request) {
         return assuntoService.atualizaAssunto(idMateria, idAssunto, request, dadosAlteracaoAssuntoDTO);
     }

@@ -36,14 +36,14 @@ public class Assunto {
     @Setter
     private int quantidadePdf;
 
-    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Questao> listaDeQuestoes = new ArrayList<>();
 
     @Setter
     @ManyToOne
     private Materia materia;
 
-    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<PlanejadorEstudos> listaPlanejadorEstudos = new ArrayList<>();
 
     public Assunto(DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO) {
@@ -60,9 +60,7 @@ public class Assunto {
     }
 
     public void deletaPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {
-        this.listaPlanejadorEstudos = this.listaPlanejadorEstudos.stream()
-            .filter(pe -> !Objects.equals(pe.getId(), planejadorEstudos.getId()))
-            .toList();
+        this.listaPlanejadorEstudos.remove(planejadorEstudos);
     }
 
 }

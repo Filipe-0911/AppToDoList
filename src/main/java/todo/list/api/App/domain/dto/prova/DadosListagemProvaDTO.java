@@ -8,17 +8,20 @@ import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
 import todo.list.api.App.domain.model.Prova;
 
 public record DadosListagemProvaDTO(
-    String titulo,
-    LocalDateTime dataDaProva,
-    List<DadosListagemMateriaDTO> listaDeMaterias
+        Long id,
+        String titulo,
+        LocalDateTime dataDaProva,
+        List<DadosListagemMateriaDTO> listaDeMaterias
 ) {
 
     public DadosListagemProvaDTO(Prova prova) {
-        this(prova.getTitulo(), 
-        prova.getDataDaProva(), 
-        prova.getListaDeMaterias().stream()
-        .map(DadosListagemMateriaDTO::new).
-        collect(Collectors.toList()));
+        this(
+                prova.getId(),
+                prova.getTitulo(),
+                prova.getDataDaProva(),
+                prova.getListaDeMaterias().stream()
+                        .map(DadosListagemMateriaDTO::new).
+                        collect(Collectors.toList()));
     }
 
 }

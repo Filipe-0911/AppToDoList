@@ -63,8 +63,8 @@ public class PlanejadorEstudosService {
         boolean planejadorPertenceAUsuario = listaPlanejadorEstudosUsuario.contains(planejadorEstudos);
 
         if (planejadorPertenceAUsuario) {
-            usuario.deletaPlanejamento(planejadorEstudos);
             planejadorEstudosRepository.delete(planejadorEstudos);
+            usuario.deletaPlanejamento(planejadorEstudos);
             assunto.deletaPlanejadorEstudos(planejadorEstudos);
 
             return ResponseEntity.noContent().build();

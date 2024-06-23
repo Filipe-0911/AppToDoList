@@ -26,11 +26,11 @@ public class MateriaService {
     @Autowired
     private MateriaRepository materiaRepository;
     @Autowired
-    private ProvaRepository provaRepository;
+    private ProvaService provaService;
 
     public ResponseEntity<Page<DadosListagemMateriaDTO>> buscaMaterias(HttpServletRequest request, Long idProva, Pageable pageable) {
 
-        if (__estaProvaPertenceAEsteUsuario(request, idProva)) {
+        if (__estaProvaPertenceAEsteUsuarioOuMateriaJaExiste(request, idProva, null)) {
             Page<DadosListagemMateriaDTO> listaDeMaterias = materiaRepository.findByProvaId(pageable, idProva)
                     .map(DadosListagemMateriaDTO::new);
             return ResponseEntity.ok(listaDeMaterias);
@@ -39,33 +39,40 @@ public class MateriaService {
     }
 
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@Valid DadosCriacaoMateriaDTO dadosMateria, Long idProva, HttpServletRequest request) {
-        Prova prova = __buscaProvaPeloId(idProva);
+        Prova prova = provaService.buscaProvaPeloId(idProva);
 
-        if (__estaProvaPertenceAEsteUsuario(request, idProva)) {
+        if (__estaProvaPertenceAEsteUsuarioOuMateriaJaExiste(request, idProva, dadosMateria)) {
             Materia materia = new Materia(dadosMateria);
             materia.setProva(prova);
             prova.setListaDeMaterias(materia);
 
-            return ResponseEntity.ok(new DadosListagemMateriaDTO(materia));
+            return ResponseEntity.ok(new DadosListagemMateriaDTO(materiaRepository.findByNome(dadosMateria.nome())));
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
-    
+
     public Materia buscaMateriaEspecifica(Long id) {
         return materiaRepository.getReferenceById(id);
     }
 
-    private boolean __estaProvaPertenceAEsteUsuario(HttpServletRequest request, Long idProva) {
+    private boolean __estaProvaPertenceAEsteUsuarioOuMateriaJaExiste(HttpServletRequest request, Long idProva, DadosCriacaoMateriaDTO dadosCriacaoMateriaDTO) {
+        if (dadosCriacaoMateriaDTO != null) {
+            boolean materiaJaExiste = __materiaJaExiste(dadosCriacaoMateriaDTO, idProva);
+            if (materiaJaExiste) return false;
+        }
         Usuario usuario = usuarioService.buscaUsuario(request);
         List<Prova> listaDeProvas = usuario.getProvas();
-        Prova prova = __buscaProvaPeloId(idProva);
+        Prova prova = provaService.buscaProvaPeloId(idProva);
 
         return listaDeProvas.contains(prova);
 
     }
 
-    private Prova __buscaProvaPeloId(Long idProva) {
-        return provaRepository.getReferenceById(idProva);
+    private boolean __materiaJaExiste(DadosCriacaoMateriaDTO dadosCriacaoMateriaDTO, Long idProva) {
+        Prova prova = provaService.buscaProvaPeloId(idProva);
+        List<String> listaDeNomesMaterias = prova.getListaDeMaterias().stream().map(Materia::getNome).toList();
+
+        return listaDeNomesMaterias.contains(dadosCriacaoMateriaDTO.nome());
     }
 
 }

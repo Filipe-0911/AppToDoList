@@ -29,5 +29,7 @@ public interface QuestaoRepository extends JpaRepository<Questao, Long> {
         WHERE q.assunto.id IN :idList
         GROUP BY assunto.nome, date(q.dataPreenchimento)
         """)
-     Page<DadosDetalhamentoMediaQuestoesDTO> calcularEstatisticasPorDia(Pageable pageable, List<Long> idList);
+    Page<DadosDetalhamentoMediaQuestoesDTO> calcularEstatisticasPorDia(Pageable pageable, List<Long> idList);
+
+    Page<Questao> findAllByAssuntoId(Pageable pageable, Long id);
 }

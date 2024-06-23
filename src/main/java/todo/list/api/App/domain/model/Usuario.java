@@ -108,8 +108,11 @@ public class Usuario implements UserDetails {
             .toList();
     }
     public void deletaPlanejamento(PlanejadorEstudos planejadorEstudos) {
+        this.planejadorEstudos.remove(planejadorEstudos);
+    }
+
+    public void removerTodosOsPlanejamentosDaProva(Prova prova) {
         this.planejadorEstudos = this.planejadorEstudos.stream()
-            .filter(pe -> !Objects.equals(pe.getId(), planejadorEstudos.getId()))
-            .toList();
+                .filter(p -> p.getAssunto().getMateria().getProva() != prova).toList();
     }
 }

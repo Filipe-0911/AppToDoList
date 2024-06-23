@@ -3,11 +3,14 @@ package todo.list.api.App.domain.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
+import todo.list.api.App.domain.dto.usuario.DadosUsuarioDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.PlanejadorEstudos;
@@ -29,6 +32,12 @@ public class UsuarioService {
 
     public static String encriptadorSenhaUsuario(String senha) {
         return bCryptPasswordEncoder.encode(senha);
+    }
+
+    public ResponseEntity<DadosUsuarioDTO> salvarUsuario (DadosCriacaoUsuarioDTO dadosCriacaoUsuarioDTO) {
+        Usuario usuario = new Usuario(dadosCriacaoUsuarioDTO);
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(new DadosUsuarioDTO(usuario));
     }
 
     public Usuario buscaUsuario(HttpServletRequest request) {
@@ -54,6 +63,11 @@ public class UsuarioService {
 
     public boolean verificaSePlanejadorEstudosPertenceAUsuario(Usuario usuario, PlanejadorEstudos planejadorEstudos) {
         return usuario.getPlanejadorEstudos().contains(planejadorEstudos);
+    }
+    public boolean verificaSeProvaPertenceAUsuario (HttpServletRequest request, Prova prova) {
+        Usuario usuario = buscaUsuario(request);
+
+        return usuario.getProvas().contains(prova);
     }
 
     private List<Assunto> __pegaListaAssuntoUsuario(Usuario usuario) {

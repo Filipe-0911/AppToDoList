@@ -37,10 +37,7 @@ public class UsuarioController {
     @Transactional
     @PostMapping("/addUser")
     public ResponseEntity<DadosUsuarioDTO> criarUsuario(@RequestBody @Valid DadosCriacaoUsuarioDTO dados) {
-        Usuario usuario = new Usuario(dados);
-        repository.save(usuario);
-
-        return ResponseEntity.ok(new DadosUsuarioDTO(usuario));
+        return usuarioService.salvarUsuario(dados);
 
     }
 }

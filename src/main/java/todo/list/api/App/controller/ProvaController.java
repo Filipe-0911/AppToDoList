@@ -24,13 +24,13 @@ import todo.list.api.App.domain.services.ProvaService;
 
 @RestController
 @RequestMapping("/provas")
-@SecurityRequirement(name =  "bearer-key")
+@SecurityRequirement(name = "bearer-key")
 public class ProvaController {
     @Autowired
     private ProvaService provaService;
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemProvaDTO>> getProvas(@PageableDefault(size=5, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemProvaDTO>> getProvas(@PageableDefault(size = 5, page = 0, sort = {"dataDaProva"}) Pageable pageable, HttpServletRequest request) {
         return provaService.buscarProvas(pageable, request);
     }
 
@@ -41,16 +41,13 @@ public class ProvaController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity<DadosListagemProvaDTO> inserirProva(
-        @RequestBody @Valid DadosCriacaoProvaDTO dadosProva, 
-        HttpServletRequest request) {
-        
+    public ResponseEntity<DadosListagemProvaDTO> inserirProva(@RequestBody @Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) throws Exception {
         return provaService.inserirProva(dadosProva, request);
     }
 
     @Transactional
     @DeleteMapping("/{idProva}")
-    public ResponseEntity<Void> deletarProva(@PathVariable Long idProva , HttpServletRequest request) {
+    public ResponseEntity<Void> deletarProva(@PathVariable Long idProva, HttpServletRequest request) {
         return provaService.deletarProvaPeloId(request, idProva);
     }
 

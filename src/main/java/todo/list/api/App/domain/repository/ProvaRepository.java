@@ -9,4 +9,6 @@ import todo.list.api.App.domain.model.Prova;
 public interface ProvaRepository extends JpaRepository<Prova, Long>{
 
     Page<Prova> findAllByUsuarioId(Pageable pageable, Long id);
+
+    Prova findByTitulo(String titulo);
 }

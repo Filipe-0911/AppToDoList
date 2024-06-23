@@ -2,19 +2,14 @@ package todo.list.api.App.domain.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name="palenajor_estudos")
+@Table(name="planejador_estudos")
 @Entity(name="PlanejadorEstudos")
 @Getter
 @AllArgsConstructor
@@ -28,7 +23,7 @@ public class PlanejadorEstudos {
     private LocalDateTime dataInicio;
 
     @Setter
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Assunto assunto;
     @Setter
     private LocalDateTime dataTermino;
@@ -39,6 +34,4 @@ public class PlanejadorEstudos {
     @Setter
     @ManyToOne
     private Usuario usuario;
-    
-
 }

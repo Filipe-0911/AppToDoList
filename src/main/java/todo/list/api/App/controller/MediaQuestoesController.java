@@ -15,7 +15,7 @@ import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoes
 import todo.list.api.App.domain.services.QuestaoService;
 
 @RestController
-@RequestMapping("/mediaquestoes")
+@RequestMapping("/media-questoes")
 public class MediaQuestoesController {
     @Autowired
     private QuestaoService questaoService;

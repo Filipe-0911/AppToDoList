@@ -36,16 +36,20 @@ public class ProvaService {
         return null;
     }
     
-    public ResponseEntity<DadosListagemProvaDTO> inserirProva(@Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) {
-                
-        Usuario usuario = usuarioService.buscaUsuario(request);
-        Prova prova = new Prova(dadosProva);
+    public ResponseEntity<DadosListagemProvaDTO> inserirProva(@Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) throws Exception {
+        boolean provaJaCadastrada = buscaProvaPorTituloParaNaoHaverDuplicidade(dadosProva);
 
-        prova.setUsuario(usuario);
-        usuario.setProvas(prova);
+        if (!provaJaCadastrada) {
+            Usuario usuario = usuarioService.buscaUsuario(request);
+            Prova prova = new Prova(dadosProva);
+            prova.setUsuario(usuario);
+            usuario.setProvas(prova);
 
-        DadosListagemProvaDTO provaDto = new DadosListagemProvaDTO(prova);
-        return ResponseEntity.ok(provaDto);
+            DadosListagemProvaDTO provaDto = new DadosListagemProvaDTO(provaRepository.findByTitulo(dadosProva.titulo()));
+            return ResponseEntity.ok(provaDto);
+        }
+        throw new Exception("Prova já cadastrada");
+
     }
 
     public ResponseEntity<DadosDetalhamentoProvaDTO> buscaProvaEspecifica(Long idProva, HttpServletRequest request) {
@@ -66,6 +70,8 @@ public class ProvaService {
         Usuario usuario = usuarioService.buscaUsuario(request);
         Prova prova = provaRepository.getReferenceById(idProva);
         if (__listaUsuarioContemProvaBuscada(usuario.getProvas(), prova)) {
+            // antes de remover a prova, devem ser removidos todos os planejamentos referentes a esta prova
+            usuario.removerTodosOsPlanejamentosDaProva(prova);
             provaRepository.delete(prova);
             usuario.deleteProvas(prova);
             
@@ -73,5 +79,14 @@ public class ProvaService {
         } 
 
         return null;
+    }
+
+    private boolean buscaProvaPorTituloParaNaoHaverDuplicidade(DadosCriacaoProvaDTO dadosCriacaoProvaDTO) {
+        Prova prova = provaRepository.findByTitulo(dadosCriacaoProvaDTO.titulo());
+        return prova != null;
+    }
+
+    public Prova buscaProvaPeloId(Long id) {
+        return provaRepository.getReferenceById(id);
     }
 }

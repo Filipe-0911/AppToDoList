@@ -31,8 +31,6 @@ public class AssuntoService {
     private UsuarioService usuarioService;
     @Autowired
     private MateriaService materiaService;
-    @Autowired
-    private QuestaoService questaoService;
 
     public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscaAssuntos(@PageableDefault(size = 5, page = 0, sort = {"nome"}) Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
         boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
@@ -43,7 +41,7 @@ public class AssuntoService {
 
             return ResponseEntity.ok(listaAssuntosDTOs);
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<DadosListagemAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
@@ -57,7 +55,7 @@ public class AssuntoService {
             assuntoRepository.save(assunto);
             return ResponseEntity.ok(new DadosListagemAssuntoDTO(assunto));
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> buscaAssuntoEspecifico(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
@@ -66,20 +64,7 @@ public class AssuntoService {
             Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
             return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
         }
-        return null;
-
-    }
-
-    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
-
-        boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
-        if (materiaPertenceAUsuario) {
-            Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
-
-            return questaoService.criarQuestao(dadosCriacaoQuestaoDTO, assunto);
-            
-        }
-        return null;
+        return ResponseEntity.badRequest().build();
 
     }
 
@@ -94,7 +79,7 @@ public class AssuntoService {
 
             return ResponseEntity.noContent().build();
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     public Assunto buscarAssuntoEspecificoSemParametrosDePath(Long id) {
@@ -124,6 +109,6 @@ public class AssuntoService {
 
             return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 }

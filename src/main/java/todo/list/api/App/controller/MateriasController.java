@@ -1,5 +1,6 @@
 package todo.list.api.App.controller;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,19 +22,24 @@ import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
 import todo.list.api.App.domain.services.MateriaService;
 
 @RestController
-@RequestMapping("/materias")
+@RequestMapping("provas/{idProva}/materias")
 @SecurityRequirement(name =  "bearer-key")
 public class MateriasController {
     @Autowired
     private MateriaService materiaService;
 
-    @GetMapping("/prova/{idProva}")
+    @GetMapping
     public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idProva) {
         return materiaService.buscaMaterias(request, idProva, pageable);
     }
 
+    @GetMapping("/{idMateria}")
+    public ResponseEntity<DadosListagemMateriaDTO> getMateriaEspecifica (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
+        return ResponseEntity.ok(new DadosListagemMateriaDTO(materiaService.buscaMateriaEspecifica(idMateria)));
+    }
+
     @Transactional
-    @PostMapping("/{idProva}")
+    @PostMapping
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, @PathVariable Long idProva, HttpServletRequest request) {
         return materiaService.inserirMaterias(dadosMateria, idProva, request);
     }
