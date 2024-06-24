@@ -8,4 +8,6 @@ import todo.list.api.App.domain.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     UserDetails findByLogin(String login);
+
+    boolean existsByLogin(String login);
 }

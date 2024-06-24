@@ -17,6 +17,7 @@ import todo.list.api.App.domain.model.PlanejadorEstudos;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.UsuarioRepository;
+import todo.list.api.App.domain.services.validation.usuario.UsuarioValidation;
 import todo.list.api.App.infra.security.TokenService;
 
 @Service
@@ -27,6 +28,8 @@ public class UsuarioService {
     private TokenService tokenService;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private List<UsuarioValidation> validadorUsuario;
 
     private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -35,6 +38,7 @@ public class UsuarioService {
     }
 
     public ResponseEntity<DadosUsuarioDTO> salvarUsuario (DadosCriacaoUsuarioDTO dadosCriacaoUsuarioDTO) {
+        validadorUsuario.forEach(u -> u.validar(dadosCriacaoUsuarioDTO));
         Usuario usuario = new Usuario(dadosCriacaoUsuarioDTO);
         usuarioRepository.save(usuario);
         return ResponseEntity.ok(new DadosUsuarioDTO(usuario));

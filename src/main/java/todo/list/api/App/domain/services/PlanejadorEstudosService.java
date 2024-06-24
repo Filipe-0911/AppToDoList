@@ -20,6 +20,7 @@ import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.PlanejadorEstudos;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.PlanejadorEstudosRepository;
+import todo.list.api.App.domain.services.validation.planejador.PlanejadorEstudosValidation;
 
 @Service
 public class PlanejadorEstudosService {
@@ -30,6 +31,8 @@ public class PlanejadorEstudosService {
     private UsuarioService usuarioService;
     @Autowired
     private AssuntoService assuntoService;
+    @Autowired
+    private List<PlanejadorEstudosValidation> validadorPlanejadorEstudos;
 
     public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> alteraPlanejamento(Long idPlanejador, HttpServletRequest request, DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         Usuario usuario = usuarioService.buscaUsuario(request);
@@ -94,7 +97,7 @@ public class PlanejadorEstudosService {
 
         if (usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia)) {
             Page<DadosListagemPlanejadorEstudosDTO> listaDePlanejadorEstudos = planejadorEstudosRepository.findAllByAssuntoIdAndCanceladoIsFalse(pageable, idAssunto)
-                    .map(p -> new DadosListagemPlanejadorEstudosDTO(p));
+                    .map(DadosListagemPlanejadorEstudosDTO::new);
 
             return ResponseEntity.ok(listaDePlanejadorEstudos);
         }
@@ -113,6 +116,7 @@ public class PlanejadorEstudosService {
                     false,
                     usuario);
 
+            validadorPlanejadorEstudos.forEach(v -> v.validar(planejadorEstudos));
             planejadorEstudosRepository.save(planejadorEstudos);
             usuario.setPlanejadorEstudos(planejadorEstudos);
             assunto.setPlanejadorEstudos(planejadorEstudos);
