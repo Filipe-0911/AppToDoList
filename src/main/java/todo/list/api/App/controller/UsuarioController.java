@@ -15,15 +15,11 @@ import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
 import todo.list.api.App.domain.dto.usuario.DadosUsuarioDTO;
 import todo.list.api.App.domain.model.Usuario;
-import todo.list.api.App.domain.repository.UsuarioRepository;
 import todo.list.api.App.domain.services.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
-    
-    @Autowired
-    private UsuarioRepository repository;
     @Autowired
     private UsuarioService usuarioService;
     
@@ -33,11 +29,9 @@ public class UsuarioController {
         Usuario usuarioBuscado = usuarioService.buscaUsuario(httpServletRequest);
         return ResponseEntity.ok(new DadosUsuarioDTO(usuarioBuscado));
     }
-
     @Transactional
     @PostMapping("/addUser")
     public ResponseEntity<DadosUsuarioDTO> criarUsuario(@RequestBody @Valid DadosCriacaoUsuarioDTO dados) {
         return usuarioService.salvarUsuario(dados);
-
     }
 }

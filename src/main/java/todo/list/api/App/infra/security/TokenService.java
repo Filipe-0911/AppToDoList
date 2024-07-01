@@ -37,6 +37,7 @@ public class TokenService {
     }
 
     public String getSubject(String tokenJWT) {
+        tokenJWT = tokenJWT.replace("Bearer ", "");
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -51,6 +52,7 @@ public class TokenService {
     }
 
     public Long getClaim(String tokenJWT) {
+        tokenJWT = tokenJWT.replace("Bearer ", "");
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)

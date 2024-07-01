@@ -22,8 +22,6 @@ import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.services.AssuntoService;
 
 @RestController
@@ -42,13 +40,10 @@ public class AssuntoController {
     public ResponseEntity<DadosListagemAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.criarAssunto(dadosCriacaoAsssuntoDTO, request, idMateria);
     }
-
     @GetMapping("/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> buscaAssuntoEspecifico(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.buscaAssuntoEspecifico(idMateria, idAssunto, request);
-
     }
-
     @Transactional
     @DeleteMapping("/{idAssunto}")
     public ResponseEntity<Void> deletarAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {

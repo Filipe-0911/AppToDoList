@@ -1,6 +1,5 @@
 package todo.list.api.App.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,12 +31,10 @@ public class MateriasController {
     public ResponseEntity<Page<DadosListagemMateriaDTO>> getMaterias (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idProva) {
         return materiaService.buscaMaterias(request, idProva, pageable);
     }
-
     @GetMapping("/{idMateria}")
     public ResponseEntity<DadosListagemMateriaDTO> getMateriaEspecifica (@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
         return ResponseEntity.ok(new DadosListagemMateriaDTO(materiaService.buscaMateriaEspecifica(idMateria)));
     }
-
     @Transactional
     @PostMapping
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, @PathVariable Long idProva, HttpServletRequest request) {

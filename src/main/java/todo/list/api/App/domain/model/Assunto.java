@@ -2,7 +2,6 @@ package todo.list.api.App.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

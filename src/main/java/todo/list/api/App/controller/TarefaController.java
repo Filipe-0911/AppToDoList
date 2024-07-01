@@ -32,28 +32,23 @@ public class TarefaController {
     public ResponseEntity<Page<DadosListagemTarefaDTO>> listarTarefas(@PageableDefault(size=5, page=0, sort = {"data"})Pageable pageable, HttpServletRequest request) {
         return tarefaService.listarTarefas(pageable, request);
     }
-    
     @GetMapping("/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> obterDadosTarefaEspecifica(@PathVariable Long idTarefa, HttpServletRequest request) {
         return tarefaService.getTarefaEspecifica(request, idTarefa);
     }
-
     @Transactional
     @PostMapping
     public ResponseEntity<DadosDetalhamentoTarefaDTO> inserirTarefa(@RequestBody DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
         return tarefaService.criarTarefa(dadosTarefa, request);
     }
-
     @Transactional
     @PutMapping("/concluir/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> concluirTarefa(@PathVariable Long idTarefa, HttpServletRequest request) {
         return tarefaService.concluirTarefa(idTarefa, request);
     }
-
     @Transactional
     @PutMapping("/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> alterarTarefa(@PathVariable Long idTarefa, @RequestBody DadosCriacaoTarefasDTO alteracao, HttpServletRequest request) {
         return tarefaService.atualizarInformacoes(idTarefa, alteracao, request);
     }
-
 }

@@ -16,7 +16,11 @@ import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoes
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
-import todo.list.api.App.domain.model.*;
+import todo.list.api.App.domain.model.Assunto;
+import todo.list.api.App.domain.model.Materia;
+import todo.list.api.App.domain.model.Prova;
+import todo.list.api.App.domain.model.Questao;
+import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.QuestaoRepository;
 
 @Service
@@ -88,7 +92,6 @@ public class QuestaoService {
         return usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia);
     }
     private boolean provaPertenceAoUsuario(Long idProva, HttpServletRequest request) {
-        Usuario usuario = usuarioService.buscaUsuario(request);
         Prova prova = provaService.buscaProvaPeloId(idProva);
         return usuarioService.verificaSeProvaPertenceAUsuario(request, prova);
     }

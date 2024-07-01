@@ -1,5 +1,6 @@
 package todo.list.api.App.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import todo.list.api.App.domain.services.PlanejadorEstudosService;
 
 @RestController
 @RequestMapping("/planejador")
+@SecurityRequirement(name =  "bearer-key")
 public class PlanejadorEstudosController {
     @Autowired
     private PlanejadorEstudosService planejadorEstudosService;
@@ -34,34 +36,27 @@ public class PlanejadorEstudosController {
     public ResponseEntity<DadosListagemPlanejadorEstudosDTO> inserePlanejadorEstudos(@PathVariable Long idAssunto, @RequestBody @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
         return planejadorEstudosService.inserePlanejadorEstudos(idAssunto, dadosCriacaoPlanejadorEstudosDTO, request);
     }
-
     @GetMapping("/{idAssunto}")
     public ResponseEntity<Page<DadosListagemPlanejadorEstudosDTO>> listaPlanejador(@PageableDefault(size = 5, page = 0, sort = {"dataInicio"}) Pageable pageable, @PathVariable Long idAssunto, HttpServletRequest request) {
         return planejadorEstudosService.listaPlanejador(pageable, idAssunto, request);
     }
-
     @GetMapping("/especifico/{idPlanejador}")
     public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> buscaPlanejadorEspecifico(@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.buscaPlanejadorEspecifico(idPlanejador, request);
     }
-
     @Transactional
     @DeleteMapping("/especifico/{idPlanejador}")
     public ResponseEntity<Void> deletaPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.deletaPlanejamento(idPlanejador, request);
     }
-
     @Transactional
     @PutMapping("/especifico/{idPlanejador}")
     public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> alteraPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request, @RequestBody DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         return planejadorEstudosService.alteraPlanejamento(idPlanejador, request, dadosAlteracaoPlanejadorEstudosDTO);
     }
-
     @Transactional
     @PutMapping("/especifico/cancelar/{idPlanejador}")
     public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> cancelaPlanejamentoEstudo (@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.cancelarPlanejamentoEstudos(idPlanejador, request);
     }
-
-
 }

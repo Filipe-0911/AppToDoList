@@ -15,8 +15,6 @@ import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Usuario;

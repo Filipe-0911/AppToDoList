@@ -16,7 +16,6 @@ import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.MateriaRepository;
-import todo.list.api.App.domain.repository.ProvaRepository;
 
 @Service
 public class MateriaService {
