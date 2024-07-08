@@ -67,7 +67,22 @@ public class TokenService {
 
     }
 
+    public boolean authenticate(String tokenJWT) {
+        tokenJWT = tokenJWT.replace("Bearer ", "");
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWT.require(algorithm)
+                   .withIssuer(ISSUER)
+                   .build()
+                   .verify(tokenJWT);
+            return true;
+
+        } catch (JWTVerificationException exception){
+            throw new RuntimeException("Token JWT inválido ou expirado.");
+        }
+    }
+
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.of("-03:00"));
     }
 }
