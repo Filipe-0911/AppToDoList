@@ -37,7 +37,7 @@ public class ProvaService {
     }
     
     public ResponseEntity<DadosListagemProvaDTO> inserirProva(@Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) throws Exception {
-        boolean provaJaCadastrada = buscaProvaPorTituloParaNaoHaverDuplicidade(dadosProva);
+        boolean provaJaCadastrada = buscaProvaPorTituloParaNaoHaverDuplicidade(dadosProva, request);
 
         if (!provaJaCadastrada) {
             Usuario usuario = usuarioService.buscaUsuario(request);
@@ -45,7 +45,7 @@ public class ProvaService {
             prova.setUsuario(usuario);
             usuario.setProvas(prova);
 
-            DadosListagemProvaDTO provaDto = new DadosListagemProvaDTO(provaRepository.findByTitulo(dadosProva.titulo()));
+            DadosListagemProvaDTO provaDto = new DadosListagemProvaDTO(provaRepository.findByTituloAndUsuarioId(dadosProva.titulo(), usuario.getId()));
             return ResponseEntity.ok(provaDto);
         }
         throw new Exception("Prova já cadastrada");
@@ -81,9 +81,9 @@ public class ProvaService {
         return null;
     }
 
-    private boolean buscaProvaPorTituloParaNaoHaverDuplicidade(DadosCriacaoProvaDTO dadosCriacaoProvaDTO) {
-        Prova prova = provaRepository.findByTitulo(dadosCriacaoProvaDTO.titulo());
-        return prova != null;
+    private boolean buscaProvaPorTituloParaNaoHaverDuplicidade(DadosCriacaoProvaDTO dadosCriacaoProvaDTO, HttpServletRequest request) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        return usuario.getProvas().contains(new Prova(dadosCriacaoProvaDTO));
     }
 
     public Prova buscaProvaPeloId(Long id) {

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,11 @@ public class TarefaController {
     @PutMapping("/{idTarefa}")
     public ResponseEntity<DadosDetalhamentoTarefaDTO> alterarTarefa(@PathVariable Long idTarefa, @RequestBody DadosCriacaoTarefasDTO alteracao, HttpServletRequest request) {
         return tarefaService.atualizarInformacoes(idTarefa, alteracao, request);
+    }
+
+    @Transactional
+    @DeleteMapping("/{idTarefa}")
+    public ResponseEntity<Void> deletarTarefa(@PathVariable Long idTarefa, HttpServletRequest request) {
+        return tarefaService.deletarTarefa(idTarefa, request);
     }
 }

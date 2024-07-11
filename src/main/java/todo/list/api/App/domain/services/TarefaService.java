@@ -82,7 +82,20 @@ public class TarefaService {
             return ResponseEntity.ok(new DadosDetalhamentoTarefaDTO(tarefaEspecifica));
         }
 
-        return null;
+        return ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<Void> deletarTarefa(Long idTarefa, HttpServletRequest request) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        Tarefa tarefaEspecifica = tarefaRepository.getReferenceById(idTarefa);
+
+        if (usuario.getTarefas().contains(tarefaEspecifica)) {
+            tarefaRepository.delete(tarefaEspecifica);
+            usuario.deleteTarefa(tarefaEspecifica);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
 }
