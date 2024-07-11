@@ -20,22 +20,23 @@ import todo.list.api.App.domain.repository.ProvaRepository;
 
 @Service
 public class ProvaService {
+
     @Autowired
     private ProvaRepository provaRepository;
     @Autowired
     private UsuarioService usuarioService;
 
-    public ResponseEntity<Page<DadosListagemProvaDTO>> buscarProvas(@PageableDefault(size=10, page=0, sort = {"dataDaProva"})Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemProvaDTO>> buscarProvas(@PageableDefault(size = 10, page = 0, sort = {"dataDaProva"}) Pageable pageable, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
         if (id != null) {
             Page<DadosListagemProvaDTO> listaDeProvas = provaRepository.findAllByUsuarioId(pageable, id)
-                .map(DadosListagemProvaDTO::new);
+                    .map(DadosListagemProvaDTO::new);
 
             return ResponseEntity.ok(listaDeProvas);
         }
         return null;
     }
-    
+
     public ResponseEntity<DadosListagemProvaDTO> inserirProva(@Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) throws Exception {
         boolean provaJaCadastrada = buscaProvaPorTituloParaNaoHaverDuplicidade(dadosProva, request);
 
@@ -74,9 +75,9 @@ public class ProvaService {
             usuario.removerTodosOsPlanejamentosDaProva(prova);
             provaRepository.delete(prova);
             usuario.deleteProvas(prova);
-            
+
             return ResponseEntity.noContent().build();
-        } 
+        }
 
         return null;
     }
@@ -88,5 +89,27 @@ public class ProvaService {
 
     public Prova buscaProvaPeloId(Long id) {
         return provaRepository.getReferenceById(id);
+    }
+
+    public ResponseEntity<DadosListagemProvaDTO> atualizarProva(Long idProva,
+            @Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        Prova prova = provaRepository.findById(idProva).orElseThrow(() -> new RuntimeException("Prova não encontrada"));
+        boolean provaPertenceAoUsuario = usuario.getProvas().contains(prova);
+
+        if (provaPertenceAoUsuario) {
+            prova.setTitulo(dadosProva.titulo());
+            prova.setDataDaProva(dadosProva.dataDaProva());
+
+            Prova provaDoUsuario = usuario.getProvas().stream()
+                    .filter(p -> p.getId().equals(idProva))
+                    .toList().get(0);
+            
+                    provaDoUsuario.setTitulo(dadosProva.titulo());
+                    provaDoUsuario.setDataDaProva(dadosProva.dataDaProva());
+
+            return ResponseEntity.ok(new DadosListagemProvaDTO(provaRepository.save(prova)));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
