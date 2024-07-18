@@ -1,6 +1,7 @@
 package todo.list.api.App.domain.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
+import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Usuario;
@@ -43,7 +45,18 @@ public class MateriaService {
         if (__estaProvaPertenceAEsteUsuarioOuMateriaJaExiste(request, idProva, dadosMateria)) {
             Materia materia = new Materia(dadosMateria);
             materia.setProva(prova);
-            prova.setListaDeMaterias(materia);
+
+            if (dadosMateria.listaDeAssuntos() != null && !dadosMateria.listaDeAssuntos().isEmpty()) {
+                List<Assunto> listaAssuntos = dadosMateria.listaDeAssuntos().stream()
+                        .map(Assunto::new)
+                        .collect(Collectors.toList());
+
+                materia.setAssuntos(listaAssuntos);
+
+                listaAssuntos.forEach(assunto -> assunto.setMateria(materia));
+                listaAssuntos.stream().forEach(System.out::println);
+            }
+            materiaRepository.save(materia);
 
             return ResponseEntity.ok(new DadosListagemMateriaDTO(materiaRepository.findByNome(dadosMateria.nome())));
         }
@@ -57,7 +70,9 @@ public class MateriaService {
     private boolean __estaProvaPertenceAEsteUsuarioOuMateriaJaExiste(HttpServletRequest request, Long idProva, DadosCriacaoMateriaDTO dadosCriacaoMateriaDTO) {
         if (dadosCriacaoMateriaDTO != null) {
             boolean materiaJaExiste = __materiaJaExiste(dadosCriacaoMateriaDTO, idProva);
-            if (materiaJaExiste) return false;
+            if (materiaJaExiste) {
+                return false;
+            }
         }
         Usuario usuario = usuarioService.buscaUsuario(request);
         List<Prova> listaDeProvas = usuario.getProvas();
@@ -72,6 +87,22 @@ public class MateriaService {
         List<String> listaDeNomesMaterias = prova.getListaDeMaterias().stream().map(Materia::getNome).toList();
 
         return listaDeNomesMaterias.contains(dadosCriacaoMateriaDTO.nome());
+    }
+
+    public ResponseEntity<Void> deletarMateria(HttpServletRequest request, Long idMateria) {
+        Materia materia = materiaRepository.getReferenceById(idMateria);
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        boolean materiaPertenceAoUsuario = usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia);
+
+        if (materiaPertenceAoUsuario) {
+            materiaRepository.delete(materia);
+            Prova prova = materia.getProva();
+            prova.removeMateria(materia);
+            usuario.removerTodosOsPlanejamentosDaMateria(materia);
+
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

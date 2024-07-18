@@ -8,7 +8,7 @@ import todo.list.api.App.domain.model.Materia;
 public record DadosDetalhamentoMateriaDTO(
     Long id,
     String nome,
-    List<DadosDetalhamentoAssuntoDTO> listaDeAssunto
+    List<DadosDetalhamentoAssuntoDTO> listaDeAssuntos
 ) {
     public DadosDetalhamentoMateriaDTO(Materia materia) {
         this(

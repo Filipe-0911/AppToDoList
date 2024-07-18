@@ -55,6 +55,10 @@ public class Materia {
             .filter(a -> !Objects.equals(a.getId(), assunto.getId()))
             .toList();
     }
+
+    public void setAssuntos(List<Assunto> assuntos) {
+        assuntos.forEach(assunto -> this.setAssunto(assunto));
+    }
     
     
 }

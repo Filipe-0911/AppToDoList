@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,13 @@ public class MateriasController {
     @PostMapping
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@RequestBody @Valid DadosCriacaoMateriaDTO dadosMateria, @PathVariable Long idProva, HttpServletRequest request) {
         return materiaService.inserirMaterias(dadosMateria, idProva, request);
+    }
+
+    @Transactional
+    @DeleteMapping("/{idMateria}")
+    public ResponseEntity<Void> deletarMateria(@PathVariable Long idMateria, HttpServletRequest request) {
+        return materiaService.deletarMateria(request, idMateria);
+        
     }
 
 }

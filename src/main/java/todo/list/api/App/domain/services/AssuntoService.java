@@ -42,7 +42,7 @@ public class AssuntoService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<DadosListagemAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
         boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
 
         if (materiaPertenceAUsuario) {
@@ -51,7 +51,7 @@ public class AssuntoService {
             materia.setAssunto(assunto);
             assunto.setMateria(materia);
             assuntoRepository.save(assunto);
-            return ResponseEntity.ok(new DadosListagemAssuntoDTO(assunto));
+            return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -101,8 +101,8 @@ public class AssuntoService {
             if (dadosAlteracaoAssuntoDTO.nome() != null) {
                 assunto.setNome(dadosAlteracaoAssuntoDTO.nome());
             }
-            if (dadosAlteracaoAssuntoDTO.quantidadeDePdf() != 0) {
-                assunto.setQuantidadePdf(dadosAlteracaoAssuntoDTO.quantidadeDePdf());
+            if (dadosAlteracaoAssuntoDTO.quantidadePdf() != 0) {
+                assunto.setQuantidadePdf(dadosAlteracaoAssuntoDTO.quantidadePdf());
             }
 
             return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));

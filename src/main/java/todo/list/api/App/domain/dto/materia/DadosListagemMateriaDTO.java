@@ -2,14 +2,14 @@ package todo.list.api.App.domain.dto.materia;
 
 import java.util.List;
 
-import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
+import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.model.Materia;
 
 public record DadosListagemMateriaDTO(
         Long id,
         String nome,
         String tituloProva,
-        List<DadosListagemAssuntoDTO> listaAssuntos) {
+        List<DadosDetalhamentoAssuntoDTO> listaDeAssuntos) {
 
     public DadosListagemMateriaDTO(Materia materia) {
         this(
@@ -17,7 +17,7 @@ public record DadosListagemMateriaDTO(
                 materia.getNome(),
                 materia.getProva().getTitulo(),
                 materia.getListaAssuntos().stream()
-                        .map(a -> new DadosListagemAssuntoDTO(a))
+                        .map(a -> new DadosDetalhamentoAssuntoDTO(a))
                         .toList()
         );
     }

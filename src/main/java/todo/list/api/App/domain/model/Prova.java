@@ -53,5 +53,9 @@ public class Prova {
 
     }
 
+    public void removeMateria(Materia materia) {
+        this.listaDeMaterias = this.listaDeMaterias.stream()
+            .filter(materiaDaLista -> !materiaDaLista.equals(materia)).toList();
+    }
 
 }

@@ -37,7 +37,7 @@ public class AssuntoController {
     }
     @Transactional
     @PostMapping
-    public ResponseEntity<DadosListagemAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.criarAssunto(dadosCriacaoAsssuntoDTO, request, idMateria);
     }
     @GetMapping("/{idAssunto}")

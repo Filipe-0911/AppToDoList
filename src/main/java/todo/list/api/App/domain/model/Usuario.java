@@ -116,6 +116,16 @@ public class Usuario implements UserDetails {
                 .filter(p -> p.getAssunto().getMateria().getProva() != prova).toList();
     }
 
+    public void removerTodosOsPlanejamentosDoAssunto(Assunto assunto) {
+        this.planejadorEstudos = this.planejadorEstudos.stream()
+               .filter(p -> !p.getAssunto().equals(assunto)).toList();
+    }
+
+    public void removerTodosOsPlanejamentosDaMateria(Materia materia) {
+        this.planejadorEstudos = this.planejadorEstudos.stream()
+               .filter(p -> !p.getAssunto().getMateria().equals(materia)).toList();
+    }
+
     public void deleteTarefa(Tarefa tarefaEspecifica) {
         this.tarefas.remove(tarefaEspecifica);
     }
