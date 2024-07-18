@@ -34,6 +34,8 @@ public class Assunto {
     private String nome;
     @Setter
     private int quantidadePdf;
+    @Setter
+    private String comentarios;
 
     @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Questao> listaDeQuestoes = new ArrayList<>();

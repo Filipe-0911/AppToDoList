@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
+import todo.list.api.App.domain.dto.assunto.*;
 import todo.list.api.App.domain.services.AssuntoService;
 
 @RestController
@@ -53,6 +50,19 @@ public class AssuntoController {
     @PutMapping("/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> atualizaAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosAlteracaoAssuntoDTO dadosAlteracaoAssuntoDTO, HttpServletRequest request) {
         return assuntoService.atualizaAssunto(idMateria, idAssunto, request, dadosAlteracaoAssuntoDTO);
+    }
+
+    @Transactional
+    @PostMapping("/{idAssunto}/comentarios")
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> insereComentariosAoAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO, HttpServletRequest request) {
+        System.out.println("Recebida requisição de inserção de comentários");
+        return assuntoService.insereComentarios(idMateria, idAssunto, request, dadosComentariosAssuntoDTO);
+    }
+
+    @Transactional
+    @PutMapping("/{idAssunto}/comentarios")
+    public ResponseEntity<DadosComentariosAssuntoDTO> alteraComentarios(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO, HttpServletRequest request) {
+        return assuntoService.alteraComentarios(idMateria, idAssunto, request, dadosComentariosAssuntoDTO);
     }
 
 }

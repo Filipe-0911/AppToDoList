@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import todo.list.api.App.domain.dto.assunto.DadosAlteracaoAssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosCriacaoAsssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosListagemAssuntoDTO;
+import todo.list.api.App.domain.dto.assunto.*;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Usuario;
@@ -106,6 +103,28 @@ public class AssuntoService {
             }
 
             return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<DadosDetalhamentoAssuntoDTO> insereComentarios(Long idMateria, Long idAssunto, HttpServletRequest request, DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO) {
+        boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
+        if(materiaPertenceAUsuario) {
+            Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
+
+            assunto.setComentarios(dadosComentariosAssuntoDTO.comentarios());
+            return ResponseEntity.ok(new DadosDetalhamentoAssuntoDTO(assunto));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<DadosComentariosAssuntoDTO> alteraComentarios(Long idMateria, Long idAssunto, HttpServletRequest request, DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO) {
+        boolean materiaPertenceAUsuario = __verificaSeMateriaPertenceAUsuario(request, idMateria);
+        if(materiaPertenceAUsuario) {
+            Assunto assunto = assuntoRepository.getReferenceById(idAssunto);
+
+            assunto.setComentarios(dadosComentariosAssuntoDTO.comentarios());
+            return ResponseEntity.ok(new DadosComentariosAssuntoDTO(assunto));
         }
         return ResponseEntity.badRequest().build();
     }

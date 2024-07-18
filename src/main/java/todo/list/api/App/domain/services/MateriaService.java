@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import todo.list.api.App.domain.dto.materia.DadosAlteracaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
 import todo.list.api.App.domain.model.Assunto;
@@ -105,4 +106,15 @@ public class MateriaService {
         return ResponseEntity.badRequest().build();
     }
 
+    public ResponseEntity<DadosListagemMateriaDTO> alteraMateria(HttpServletRequest request, DadosAlteracaoMateriaDTO dadosAlteracaoMateriaDTO, Long idMateria) {
+        Usuario usuario = usuarioService.buscaUsuario(request);
+        Materia materia = materiaRepository.getReferenceById(idMateria);
+        boolean materiaPertenceAoUsuario = usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia);
+
+        if(materiaPertenceAoUsuario) {
+            materia.setNome(dadosAlteracaoMateriaDTO.nome());
+            return ResponseEntity.ok(new DadosListagemMateriaDTO(materia));
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

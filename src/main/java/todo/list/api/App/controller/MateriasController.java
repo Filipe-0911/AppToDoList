@@ -6,17 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import todo.list.api.App.domain.dto.materia.DadosAlteracaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosCriacaoMateriaDTO;
 import todo.list.api.App.domain.dto.materia.DadosListagemMateriaDTO;
 import todo.list.api.App.domain.services.MateriaService;
@@ -47,6 +42,12 @@ public class MateriasController {
     public ResponseEntity<Void> deletarMateria(@PathVariable Long idMateria, HttpServletRequest request) {
         return materiaService.deletarMateria(request, idMateria);
         
+    }
+
+    @Transactional
+    @PutMapping("/{idMateria}")
+    public ResponseEntity<DadosListagemMateriaDTO> alteraMateria (@PathVariable Long idMateria, @RequestBody DadosAlteracaoMateriaDTO dadosAlteracaoMateriaDTO , HttpServletRequest request) {
+        return materiaService.alteraMateria(request, dadosAlteracaoMateriaDTO, idMateria);
     }
 
 }
