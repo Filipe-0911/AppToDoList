@@ -7,6 +7,8 @@ import todo.list.api.App.domain.model.Questao;
 
 public record DadosDetalhamentoAssuntoDTO(
     Long id,
+    Long idMateria,
+    Long idProva,
     String nome,
     int quantidadePdf,
     String comentarios,
@@ -16,6 +18,8 @@ public record DadosDetalhamentoAssuntoDTO(
     public DadosDetalhamentoAssuntoDTO(Assunto assunto) {
         this(
             assunto.getId(),
+            assunto.getMateria().getId(),
+            assunto.getMateria().getProva().getId(),
             assunto.getNome(),
             assunto.getQuantidadePdf(),
             assunto.getComentarios(),

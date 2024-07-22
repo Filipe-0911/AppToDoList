@@ -9,4 +9,6 @@ import todo.list.api.App.domain.model.Assunto;
 
 public interface AssuntoRepository extends JpaRepository<Assunto, Long>{
     Page<Assunto> findByMateriaId(Pageable pageable, Long idMateria);
+
+    Assunto findByNome(String nomeAssunto);
 }

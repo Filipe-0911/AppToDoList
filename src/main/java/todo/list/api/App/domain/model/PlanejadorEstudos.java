@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import todo.list.api.App.domain.dto.planejadorestudos.DadosCriacaoPlanejadorEstudosDTO;
 
 @Table(name="planejador_estudos")
 @Entity(name="PlanejadorEstudos")
@@ -34,4 +35,5 @@ public class PlanejadorEstudos {
     @Setter
     @ManyToOne
     private Usuario usuario;
+
 }

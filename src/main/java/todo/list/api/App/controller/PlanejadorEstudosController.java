@@ -36,8 +36,13 @@ public class PlanejadorEstudosController {
     public ResponseEntity<DadosListagemPlanejadorEstudosDTO> inserePlanejadorEstudos(@PathVariable Long idAssunto, @RequestBody @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
         return planejadorEstudosService.inserePlanejadorEstudos(idAssunto, dadosCriacaoPlanejadorEstudosDTO, request);
     }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemPlanejadorEstudosDTO>> listarTodosOsPlanejadoresDoUsuario(@PageableDefault(size = 5, page = 0, sort = {"dataInicio"}) Pageable pageable, HttpServletRequest request) {
+        return planejadorEstudosService.listarTodosOsPlanejadoresDoUsuario(pageable, request);
+    }
     @GetMapping("/{idAssunto}")
-    public ResponseEntity<Page<DadosListagemPlanejadorEstudosDTO>> listaPlanejador(@PageableDefault(size = 5, page = 0, sort = {"dataInicio"}) Pageable pageable, @PathVariable Long idAssunto, HttpServletRequest request) {
+    public ResponseEntity<Page<DadosListagemPlanejadorEstudosDTO>> listaPlanejadorDeUmAssunto(@PageableDefault(size = 5, page = 0, sort = {"dataInicio"}) Pageable pageable, @PathVariable Long idAssunto, HttpServletRequest request) {
         return planejadorEstudosService.listaPlanejador(pageable, idAssunto, request);
     }
     @GetMapping("/especifico/{idPlanejador}")
@@ -51,7 +56,7 @@ public class PlanejadorEstudosController {
     }
     @Transactional
     @PutMapping("/especifico/{idPlanejador}")
-    public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> alteraPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request, @RequestBody DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
+    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> alteraPlanejamento(@PathVariable Long idPlanejador, HttpServletRequest request, @RequestBody DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         return planejadorEstudosService.alteraPlanejamento(idPlanejador, request, dadosAlteracaoPlanejadorEstudosDTO);
     }
     @Transactional
@@ -59,4 +64,5 @@ public class PlanejadorEstudosController {
     public ResponseEntity<DadosDetalhamentoPlanejadorEstudosDTO> cancelaPlanejamentoEstudo (@PathVariable Long idPlanejador, HttpServletRequest request) {
         return planejadorEstudosService.cancelarPlanejamentoEstudos(idPlanejador, request);
     }
+
 }

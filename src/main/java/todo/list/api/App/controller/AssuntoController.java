@@ -22,22 +22,22 @@ import todo.list.api.App.domain.dto.assunto.*;
 import todo.list.api.App.domain.services.AssuntoService;
 
 @RestController
-@RequestMapping("provas/{idProva}/materias/{idMateria}/assuntos")
+@RequestMapping
 @SecurityRequirement(name="bearer-key")
 public class AssuntoController {
     @Autowired
     private AssuntoService assuntoService;
 
-    @GetMapping
+    @GetMapping("provas/{idProva}/materias/{idMateria}/assuntos")
     public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscaAssuntos(@PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.buscaAssuntos(pageable, request, idMateria);
     }
     @Transactional
-    @PostMapping
+    @PostMapping("provas/{idProva}/materias/{idMateria}/assuntos")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> criarAssunto(@RequestBody @Valid DadosCriacaoAsssuntoDTO dadosCriacaoAsssuntoDTO, HttpServletRequest request, @PathVariable Long idMateria) {
         return assuntoService.criarAssunto(dadosCriacaoAsssuntoDTO, request, idMateria);
     }
-    @GetMapping("/{idAssunto}")
+    @GetMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> buscaAssuntoEspecifico(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.buscaAssuntoEspecifico(idMateria, idAssunto, request);
     }
@@ -47,22 +47,36 @@ public class AssuntoController {
         return assuntoService.deletarAssunto(idMateria, idAssunto, request);
     }
     @Transactional
-    @PutMapping("/{idAssunto}")
+    @PutMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> atualizaAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosAlteracaoAssuntoDTO dadosAlteracaoAssuntoDTO, HttpServletRequest request) {
         return assuntoService.atualizaAssunto(idMateria, idAssunto, request, dadosAlteracaoAssuntoDTO);
     }
 
     @Transactional
-    @PostMapping("/{idAssunto}/comentarios")
+    @PostMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}/comentarios")
     public ResponseEntity<DadosDetalhamentoAssuntoDTO> insereComentariosAoAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO, HttpServletRequest request) {
-        System.out.println("Recebida requisição de inserção de comentários");
         return assuntoService.insereComentarios(idMateria, idAssunto, request, dadosComentariosAssuntoDTO);
     }
 
     @Transactional
-    @PutMapping("/{idAssunto}/comentarios")
+    @PutMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}/comentarios")
     public ResponseEntity<DadosComentariosAssuntoDTO> alteraComentarios(@PathVariable Long idMateria, @PathVariable Long idAssunto, @RequestBody @Valid DadosComentariosAssuntoDTO dadosComentariosAssuntoDTO, HttpServletRequest request) {
         return assuntoService.alteraComentarios(idMateria, idAssunto, request, dadosComentariosAssuntoDTO);
+    }
+
+    @GetMapping("assuntos/{nomeAssunto}")
+    public ResponseEntity<?> buscaAssuntoPorNome (@PathVariable String nomeAssunto, HttpServletRequest request) {
+        return assuntoService.buscaAssuntoPorNome(nomeAssunto, request);
+    }
+
+    @GetMapping("assuntos/idMateria={idMateria}")
+    public ResponseEntity<?> buscarAssuntoPorIdMateria(@PathVariable Long idMateria, HttpServletRequest request, @PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable) {
+        return assuntoService.buscaAssuntosPorIdMateria(idMateria, request, pageable);
+    }
+
+    @GetMapping("assuntos")
+    public ResponseEntity<?> buscarTodosOsAssuntos(HttpServletRequest request, @PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable) {
+        return assuntoService.buscarTodosOsAssuntos(request, pageable);
     }
 
 }

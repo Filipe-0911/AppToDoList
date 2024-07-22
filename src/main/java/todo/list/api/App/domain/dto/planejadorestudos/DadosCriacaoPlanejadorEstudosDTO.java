@@ -1,23 +1,27 @@
 package todo.list.api.App.domain.dto.planejadorestudos;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.validation.constraints.NotNull;
+import todo.list.api.App.domain.services.DateTimeConverterFromString;
+
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
-import jakarta.validation.constraints.NotNull;
-
 public record DadosCriacaoPlanejadorEstudosDTO(
-    @JsonAlias("data_inicio") 
-    LocalDateTime dataInicio,
+        @NotNull
+        @JsonAlias("data_inicio")
+        String dataInicio,
 
-    @JsonAlias("assundo_id") 
-    Long assuntoId,
+        Long assuntoId,
 
-    @NotNull 
-    @JsonAlias("data_termino")
-    LocalDateTime dataTermino,
-    
-    @JsonAlias("usuario_id")
-    Long usuarioId
+        @NotNull
+        @JsonAlias("data_termino")
+        String dataTermino
 ) {
+        public LocalDateTime getDataInicio() {
+                return DateTimeConverterFromString.parse(dataInicio);
+        }
+
+        public LocalDateTime getDataTermino() {
+                return DateTimeConverterFromString.parse(dataTermino);
+        }
 }

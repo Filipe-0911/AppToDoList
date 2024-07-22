@@ -28,6 +28,7 @@ public interface QuestaoRepository extends JpaRepository<Questao, Long> {
         INNER JOIN q.assunto assunto 
         WHERE q.assunto.id IN :idList
         GROUP BY assunto.nome, date(q.dataPreenchimento)
+        ORDER BY date(q.dataPreenchimento) 
         """)
     Page<DadosDetalhamentoMediaQuestoesDTO> calcularEstatisticasPorDia(Pageable pageable, List<Long> idList);
 
