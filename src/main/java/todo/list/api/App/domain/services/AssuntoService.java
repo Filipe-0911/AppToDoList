@@ -157,7 +157,7 @@ public class AssuntoService {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Matéria não pertence ao usuário.");
     }
 
-    public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscarTodosOsAssuntos(HttpServletRequest request, @PageableDefault(size = 5, page = 0, sort = {"nome"}) Pageable pageable) {
+    public ResponseEntity<Page<DadosListagemAssuntoDTO>> buscarTodosOsAssuntos(HttpServletRequest request, Pageable pageable) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         List<Prova> listaDeProvas = usuario.getProvas();
 

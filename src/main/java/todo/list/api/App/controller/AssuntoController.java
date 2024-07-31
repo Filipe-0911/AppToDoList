@@ -42,7 +42,7 @@ public class AssuntoController {
         return assuntoService.buscaAssuntoEspecifico(idMateria, idAssunto, request);
     }
     @Transactional
-    @DeleteMapping("/{idAssunto}")
+    @DeleteMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}")
     public ResponseEntity<Void> deletarAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
         return assuntoService.deletarAssunto(idMateria, idAssunto, request);
     }
@@ -75,7 +75,7 @@ public class AssuntoController {
     }
 
     @GetMapping("assuntos")
-    public ResponseEntity<?> buscarTodosOsAssuntos(HttpServletRequest request, @PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable) {
+    public ResponseEntity<?> buscarTodosOsAssuntos(HttpServletRequest request, @PageableDefault(size=100, page=0, sort = {"nome"})Pageable pageable) {
         return assuntoService.buscarTodosOsAssuntos(request, pageable);
     }
 

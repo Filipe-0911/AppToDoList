@@ -11,6 +11,7 @@ public record DadosListagemProvaDTO(
         Long id,
         String titulo,
         LocalDateTime dataDaProva,
+        String corDaProva,
         List<DadosListagemMateriaDTO> listaDeMaterias
 ) {
 
@@ -19,6 +20,7 @@ public record DadosListagemProvaDTO(
                 prova.getId(),
                 prova.getTitulo(),
                 prova.getDataDaProva(),
+                prova.getHexadecimalCorProva(),
                 prova.getListaDeMaterias().stream()
                         .map(DadosListagemMateriaDTO::new).
                         collect(Collectors.toList()));

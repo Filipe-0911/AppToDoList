@@ -37,7 +37,7 @@ public class MateriaService {
                     .map(DadosListagemMateriaDTO::new);
             return ResponseEntity.ok(listaDeMaterias);
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<DadosListagemMateriaDTO> inserirMaterias(@Valid DadosCriacaoMateriaDTO dadosMateria, Long idProva, HttpServletRequest request) {
@@ -55,11 +55,11 @@ public class MateriaService {
                 materia.setAssuntos(listaAssuntos);
 
                 listaAssuntos.forEach(assunto -> assunto.setMateria(materia));
-                listaAssuntos.stream().forEach(System.out::println);
+                listaAssuntos.forEach(System.out::println);
             }
             materiaRepository.save(materia);
 
-            return ResponseEntity.ok(new DadosListagemMateriaDTO(materiaRepository.findByNome(dadosMateria.nome())));
+            return ResponseEntity.ok(new DadosListagemMateriaDTO(materia));
         }
         return ResponseEntity.badRequest().build();
     }

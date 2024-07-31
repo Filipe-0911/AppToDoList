@@ -13,7 +13,8 @@ public record DadosListagemPlanejadorEstudosDTO(
         Long idProva,
         LocalDateTime dataTermino,
         String nomeAssunto,
-        Long usuarioId) {
+        Long usuarioId,
+        String cor) {
 
     public DadosListagemPlanejadorEstudosDTO(PlanejadorEstudos planejadorEstudos) {
         this(
@@ -24,7 +25,8 @@ public record DadosListagemPlanejadorEstudosDTO(
                 planejadorEstudos.getAssunto().getMateria().getProva().getId(),
                 planejadorEstudos.getDataTermino(),
                 planejadorEstudos.getAssunto().getNome(),
-                new DadosUsuarioDTO(planejadorEstudos.getUsuario()).id()
+                new DadosUsuarioDTO(planejadorEstudos.getUsuario()).id(),
+                planejadorEstudos.getAssunto().getMateria().getProva().getHexadecimalCorProva()
             );
     }
 

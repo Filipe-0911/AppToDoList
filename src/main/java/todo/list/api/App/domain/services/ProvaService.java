@@ -34,7 +34,7 @@ public class ProvaService {
 
             return ResponseEntity.ok(listaDeProvas);
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<DadosListagemProvaDTO> inserirProva(@Valid DadosCriacaoProvaDTO dadosProva, HttpServletRequest request) throws Exception {
@@ -60,7 +60,7 @@ public class ProvaService {
         if (__listaUsuarioContemProvaBuscada(usuario.getProvas(), prova)) {
             return ResponseEntity.ok(new DadosDetalhamentoProvaDTO(prova));
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean __listaUsuarioContemProvaBuscada(List<Prova> listaProvas, Prova prova) {
@@ -79,7 +79,7 @@ public class ProvaService {
             return ResponseEntity.noContent().build();
         }
 
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean buscaProvaPorTituloParaNaoHaverDuplicidade(DadosCriacaoProvaDTO dadosCriacaoProvaDTO, HttpServletRequest request) {
@@ -100,6 +100,7 @@ public class ProvaService {
         if (provaPertenceAoUsuario) {
             prova.setTitulo(dadosProva.titulo());
             prova.setDataDaProva(dadosProva.dataDaProva());
+            prova.setHexadecimalCorProva(dadosProva.corDaProva());
 
             Prova provaDoUsuario = usuario.getProvas().stream()
                     .filter(p -> p.getId().equals(idProva))

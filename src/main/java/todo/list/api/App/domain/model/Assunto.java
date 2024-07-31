@@ -3,15 +3,8 @@ package todo.list.api.App.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import ch.qos.logback.core.model.Model;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,7 +27,9 @@ public class Assunto {
     private String nome;
     @Setter
     private int quantidadePdf;
+
     @Setter
+    @Column(columnDefinition = "TEXT")
     private String comentarios;
 
     @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

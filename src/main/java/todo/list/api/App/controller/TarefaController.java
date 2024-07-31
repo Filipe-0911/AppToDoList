@@ -1,5 +1,6 @@
 package todo.list.api.App.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public class TarefaController {
     }
     @Transactional
     @PostMapping
-    public ResponseEntity<DadosDetalhamentoTarefaDTO> inserirTarefa(@RequestBody DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
+    public ResponseEntity<DadosDetalhamentoTarefaDTO> criarTarefa(@RequestBody @Valid DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
         return tarefaService.criarTarefa(dadosTarefa, request);
     }
     @Transactional

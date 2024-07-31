@@ -17,7 +17,6 @@ public class PageableService {
                 pageable.getPageSize(),
                 Sort.by("nome")
         );
-
         int start = (int) defaultPageable.getOffset();
         int end = Math.min((start + defaultPageable.getPageSize()), yourList.size());
 

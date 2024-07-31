@@ -14,6 +14,9 @@ import todo.list.api.App.domain.dto.tarefa.DadosListagemTarefaDTO;
 import todo.list.api.App.domain.model.Tarefa;
 import todo.list.api.App.domain.model.Usuario;
 import todo.list.api.App.domain.repository.TarefaRepository;
+import todo.list.api.App.domain.services.validation.tarefa.TarefaValidation;
+
+import java.util.List;
 
 @Service
 public class TarefaService {
@@ -21,6 +24,8 @@ public class TarefaService {
     private TarefaRepository tarefaRepository;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private List<TarefaValidation> verificadoresTarefa;
 
     public DadosListagemTarefaDTO isCompleted(Tarefa tarefa) {
         if (!tarefa.isConcluido()) {
@@ -41,13 +46,19 @@ public class TarefaService {
 
     public ResponseEntity<DadosDetalhamentoTarefaDTO> criarTarefa (DadosCriacaoTarefasDTO dadosTarefa, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
+        Tarefa tarefa = new Tarefa(dadosTarefa);
+
+        verificadoresTarefa.forEach(v -> v.validar(tarefa));
         
         if (id != null) {
             Usuario usuario = usuarioService.buscaUsuario(request);
-            Tarefa tarefa = new Tarefa(dadosTarefa);
+
             tarefa.setUsuario(usuario);
             usuario.setTarefas(tarefa);
-            DadosDetalhamentoTarefaDTO tarefasDTO =  new DadosDetalhamentoTarefaDTO(tarefa.getTitulo(), tarefa.getDescricao(), tarefa.getData().toString(), false);
+            tarefaRepository.save(tarefa);
+
+            DadosDetalhamentoTarefaDTO tarefasDTO =  new DadosDetalhamentoTarefaDTO(tarefa);
+
             return ResponseEntity.ok(tarefasDTO);
         }
         return ResponseEntity.badRequest().build();

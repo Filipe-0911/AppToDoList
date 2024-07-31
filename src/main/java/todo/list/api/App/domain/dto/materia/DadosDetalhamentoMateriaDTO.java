@@ -8,7 +8,8 @@ import todo.list.api.App.domain.model.Materia;
 public record DadosDetalhamentoMateriaDTO(
     Long id,
     String nome,
-    List<DadosDetalhamentoAssuntoDTO> listaDeAssuntos
+    List<DadosDetalhamentoAssuntoDTO> listaDeAssuntos,
+    String corDaProva
 ) {
     public DadosDetalhamentoMateriaDTO(Materia materia) {
         this(
@@ -17,7 +18,8 @@ public record DadosDetalhamentoMateriaDTO(
             materia.getListaAssuntos()
                 .stream()
                 .map(DadosDetalhamentoAssuntoDTO::new)
-                .toList()
+                .toList(),
+                materia.getProva().getHexadecimalCorProva()
         );
     }
 
