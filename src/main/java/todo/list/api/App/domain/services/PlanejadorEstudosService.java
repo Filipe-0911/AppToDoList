@@ -1,6 +1,8 @@
 package todo.list.api.App.domain.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import todo.list.api.App.domain.services.DateTimeConverterFromString;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -37,20 +37,19 @@ public class PlanejadorEstudosService {
     private AssuntoService assuntoService;
     @Autowired
     private List<PlanejadorEstudosValidation> validadorPlanejadorEstudos;
+    @Autowired
+    private DataService dataService;
 
     public ResponseEntity<DadosListagemPlanejadorEstudosDTO> alteraPlanejamento(Long idPlanejador, HttpServletRequest request, DadosAlteracaoPlanejadorEstudosDTO dadosAlteracaoPlanejadorEstudosDTO) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         PlanejadorEstudos planejadorEstudos = planejadorEstudosRepository.getReferenceById(idPlanejador);
 
-        LocalDateTime dataInicio = dadosAlteracaoPlanejadorEstudosDTO.dataInicio();
-        LocalDateTime dataTermino = dadosAlteracaoPlanejadorEstudosDTO.dataTermino();
-
         PlanejadorEstudos planejadorEstudosAlteracoes = new PlanejadorEstudos(
-                null,
-                dataInicio,
+                planejadorEstudos.getId(),
+                dadosAlteracaoPlanejadorEstudosDTO.dataInicio(),
                 planejadorEstudos.getAssunto(),
-                dataTermino,
-                false,
+                dadosAlteracaoPlanejadorEstudosDTO.dataTermino(),
+                planejadorEstudos.isCancelado(),
                 usuario
         );
 
@@ -121,29 +120,24 @@ public class PlanejadorEstudosService {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> inserePlanejadorEstudos(Long idAssunto, @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
+    public ResponseEntity<?> inserePlanejadorEstudos(Long idAssunto, @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
         Usuario usuario = usuarioService.buscaUsuario(request);
         Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(idAssunto);
         Materia materia = assunto.getMateria();
-
         if (usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia)) {
-            LocalDateTime dataInicio = dadosCriacaoPlanejadorEstudosDTO.getDataInicio();
-            LocalDateTime dataTermino = dadosCriacaoPlanejadorEstudosDTO.getDataTermino();
-
-            PlanejadorEstudos planejadorEstudos = new PlanejadorEstudos(
-                    null,
-                    dataInicio,
-                    assunto,
-                    dataTermino,
-                    false,
-                    usuario
-            );
+            PlanejadorEstudos planejadorEstudos = new PlanejadorEstudos(dadosCriacaoPlanejadorEstudosDTO, assunto, usuario);
+            // Executa validações
             validadorPlanejadorEstudos.forEach(v -> v.validar(planejadorEstudos));
-
+            // Salva individualmente o planejador criado
             planejadorEstudosRepository.save(planejadorEstudos);
             usuario.setPlanejadorEstudos(planejadorEstudos);
             assunto.setPlanejadorEstudos(planejadorEstudos);
 
+            if (dadosCriacaoPlanejadorEstudosDTO.revisao()) {
+                List<DadosListagemPlanejadorEstudosDTO> listaDePlanejadores = criaRevisao(dadosCriacaoPlanejadorEstudosDTO, assunto, usuario);
+                listaDePlanejadores.add(new DadosListagemPlanejadorEstudosDTO(planejadorEstudos));
+                return ResponseEntity.ok(listaDePlanejadores);
+            }
             return ResponseEntity.ok(new DadosListagemPlanejadorEstudosDTO(planejadorEstudos));
 
         }
@@ -169,6 +163,36 @@ public class PlanejadorEstudosService {
         Page<DadosListagemPlanejadorEstudosDTO> pagePlanejador = new PageImpl<DadosListagemPlanejadorEstudosDTO>(listaDePlanejadores);
         return ResponseEntity.ok(pagePlanejador);
 
+    }
+
+    private List<DadosListagemPlanejadorEstudosDTO> criaRevisao(DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, Assunto assunto, Usuario usuario) {
+        List<Long> listaDeDiasRevisao = new ArrayList<>(Arrays.asList(1L, 10L, 30L));
+        List<DadosListagemPlanejadorEstudosDTO> listaDePlanejadores = new ArrayList<>();
+
+        listaDeDiasRevisao.forEach(dia -> {
+            DadosListagemPlanejadorEstudosDTO planejadorRevisao = logicaDeCriacaoDeRevisoes(dadosCriacaoPlanejadorEstudosDTO, assunto, usuario, dia);
+            listaDePlanejadores.add(planejadorRevisao);
+        });
+
+        return listaDePlanejadores;
+    }
+
+    private DadosListagemPlanejadorEstudosDTO logicaDeCriacaoDeRevisoes (DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, Assunto assunto, Usuario usuario, Long dia) {
+        LocalDateTime dataInicio = dadosCriacaoPlanejadorEstudosDTO.getDataInicio();
+        LocalDateTime dataTermino = dadosCriacaoPlanejadorEstudosDTO.getDataTermino();
+        String dataInicioString = dataService.somaDiasADataInformada(dataInicio, dia);
+        String dataTerminoString = dataService.somaDiasADataInformada(dataTermino, dia);
+        DadosCriacaoPlanejadorEstudosDTO dadadosRevisaoUm =
+                new DadosCriacaoPlanejadorEstudosDTO(
+                        dataInicioString, dadosCriacaoPlanejadorEstudosDTO.assuntoId(), dataTerminoString,false);
+
+        PlanejadorEstudos planejadorEstudosRevisao = new PlanejadorEstudos(dadadosRevisaoUm, assunto, usuario);
+
+        planejadorEstudosRepository.save(planejadorEstudosRevisao);
+        usuario.setPlanejadorEstudos(planejadorEstudosRevisao);
+        assunto.setPlanejadorEstudos(planejadorEstudosRevisao);
+
+        return new DadosListagemPlanejadorEstudosDTO(planejadorEstudosRevisao);
     }
 
 }

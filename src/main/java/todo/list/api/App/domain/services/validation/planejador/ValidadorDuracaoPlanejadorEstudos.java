@@ -1,6 +1,7 @@
 package todo.list.api.App.domain.services.validation.planejador;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 import todo.list.api.App.domain.model.PlanejadorEstudos;
 import todo.list.api.App.domain.repository.PlanejadorEstudosRepository;
@@ -18,14 +19,17 @@ public class ValidadorDuracaoPlanejadorEstudos implements PlanejadorEstudosValid
     public void validar(PlanejadorEstudos p) {
         LocalDate dataInicio = p.getDataInicio().toLocalDate();
         List<PlanejadorEstudos> listaPlanejadorEstudos = repository.buscaTodosPorDataEUsuarioId(dataInicio, p.getUsuario().getId());
-        boolean dataDoNovoPlanejadorEstaCompreendidaEmDataDeOutroPlanejador = isEventInRange(p.getDataInicio(), p.getDataTermino(), listaPlanejadorEstudos);
+        boolean dataDoNovoPlanejadorEstaCompreendidaEmDataDeOutroPlanejador = isEventInRange(p, listaPlanejadorEstudos);
 
         if (dataDoNovoPlanejadorEstaCompreendidaEmDataDeOutroPlanejador) {
             throw new RuntimeException("Escolha um horário de início ou término diferente, pois já existe um planejamento que conflita com esses horários.");
         }
     }
 
-    private boolean isEventInRange(LocalDateTime inicioDoNovoEvento, LocalDateTime terminoNovoEvento, List<PlanejadorEstudos> listaPlanejadorEstudos) {
+    private boolean isEventInRange(PlanejadorEstudos p, List<PlanejadorEstudos> listaPlanejadorEstudos) {
+        LocalDateTime terminoNovoEvento = p.getDataInicio();
+        LocalDateTime inicioDoNovoEvento = p.getDataTermino();
+
         for (PlanejadorEstudos event : listaPlanejadorEstudos) {
             LocalDateTime planejadorExistenteInicio = event.getDataInicio();
             LocalDateTime planejadorExistenteTermino = event.getDataTermino();
@@ -34,7 +38,7 @@ public class ValidadorDuracaoPlanejadorEstudos implements PlanejadorEstudosValid
                     terminaDuranteUmPlanejadorExistente(terminoNovoEvento, planejadorExistenteInicio, planejadorExistenteTermino) ||
                     planejadorNovoCobreUmPlanejadorExistente(inicioDoNovoEvento, terminoNovoEvento, planejadorExistenteInicio, planejadorExistenteTermino) ||
                     planejadorExistenteCobreNovoPlanejador(inicioDoNovoEvento, terminoNovoEvento, planejadorExistenteInicio, planejadorExistenteTermino)) {
-                return true;
+                return !event.getId().equals(p.getId());
             }
         }
         return false;

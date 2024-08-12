@@ -15,6 +15,16 @@ public interface PlanejadorEstudosRepository extends JpaRepository<PlanejadorEst
     Page<PlanejadorEstudos> findAllByAssuntoIdAndCanceladoIsFalse(Pageable pageable, Long assuntoId);
     boolean existsByDataInicioAndUsuarioIdAndCanceladoIsFalse(LocalDateTime localDateTime, Long usuarioId);
 
+    @Query("""
+    SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END 
+    FROM PlanejadorEstudos p 
+    WHERE FUNCTION('DATE', p.dataInicio) = :dataInformada 
+    AND p.usuario.id = :usuarioId 
+    AND p.cancelado = false 
+    AND p.id != :idPlanejador
+    """)
+    boolean verificaSeExisteUmPlanejadorDiferenteParaOHorarioProposto(LocalDateTime dataInformada, Long usuarioId, Long idPlanejador);
+
     @Query("SELECT p FROM PlanejadorEstudos p WHERE FUNCTION('DATE', p.dataInicio) = :dataInicioInformada AND p.usuario.id = :id AND p.cancelado = false")
     List<PlanejadorEstudos> buscaTodosPorDataEUsuarioId(LocalDate dataInicioInformada, Long id);
 }

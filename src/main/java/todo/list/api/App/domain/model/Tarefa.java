@@ -3,7 +3,7 @@ package todo.list.api.App.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import todo.list.api.App.domain.dto.tarefa.DadosCriacaoTarefasDTO;
-import todo.list.api.App.domain.services.DateTimeConverterFromString;
+import todo.list.api.App.domain.services.DataService;
 
 import java.time.LocalDateTime;
 
@@ -31,13 +31,13 @@ public class Tarefa {
     public Tarefa(DadosCriacaoTarefasDTO dados) {
         this.titulo = dados.titulo();
         this.descricao = dados.descricao();
-        this.data = DateTimeConverterFromString.parse(dados.data());
+        this.data = DataService.parse(dados.data());
         this.concluido = false;
     }
 
     public void atualizarInformacoes(DadosCriacaoTarefasDTO alteracao) {
         if (alteracao.data() != null) {
-            this.data = DateTimeConverterFromString.parse(alteracao.data());
+            this.data = DataService.parse(alteracao.data());
         }
         if (alteracao.titulo() != null) {
             this.titulo = alteracao.titulo();

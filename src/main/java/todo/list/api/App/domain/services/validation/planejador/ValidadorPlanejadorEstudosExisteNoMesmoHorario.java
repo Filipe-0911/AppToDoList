@@ -11,7 +11,7 @@ public class ValidadorPlanejadorEstudosExisteNoMesmoHorario implements Planejado
     private PlanejadorEstudosRepository planejadorEstudosRepository;
     @Override
     public void validar(PlanejadorEstudos planejadorEstudos) {
-        boolean existeOutroPlanejadorEstudosNoMesmoHorario = planejadorEstudosRepository.existsByDataInicioAndUsuarioIdAndCanceladoIsFalse(planejadorEstudos.getDataInicio(), planejadorEstudos.getUsuario().getId());
+        boolean existeOutroPlanejadorEstudosNoMesmoHorario = planejadorEstudosRepository.verificaSeExisteUmPlanejadorDiferenteParaOHorarioProposto(planejadorEstudos.getDataInicio(), planejadorEstudos.getUsuario().getId(), planejadorEstudos.getId());
         if (existeOutroPlanejadorEstudosNoMesmoHorario) {
             throw new RuntimeException("Já existe um planejador para este dia e horário.");
         }

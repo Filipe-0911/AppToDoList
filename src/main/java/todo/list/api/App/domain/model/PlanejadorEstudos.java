@@ -36,4 +36,12 @@ public class PlanejadorEstudos {
     @ManyToOne
     private Usuario usuario;
 
+    public PlanejadorEstudos(DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, Assunto assunto, Usuario usuario) {
+        this.dataInicio = dadosCriacaoPlanejadorEstudosDTO.getDataInicio();
+        this.dataTermino = dadosCriacaoPlanejadorEstudosDTO.getDataTermino();
+        this.assunto = assunto;
+        this.cancelado = false;
+        this.usuario = usuario;
+    }
+
 }

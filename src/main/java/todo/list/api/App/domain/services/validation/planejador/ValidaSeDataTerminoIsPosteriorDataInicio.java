@@ -11,6 +11,8 @@ public class ValidaSeDataTerminoIsPosteriorDataInicio implements PlanejadorEstud
     public void validar(PlanejadorEstudos p) {
         long diferentaEmMinutos = Duration.between(p.getDataInicio(), p.getDataTermino()).toMinutes();
         if (diferentaEmMinutos < 0) {
+            System.out.println("Inicio: " + p.getDataInicio());
+            System.out.println("Término: " + p .getDataTermino());
             throw new RuntimeException("A Data de término deve ser posterior à data de início.");
         }
     }

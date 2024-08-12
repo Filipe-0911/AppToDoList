@@ -33,7 +33,7 @@ public class PlanejadorEstudosController {
 
     @Transactional
     @PostMapping("/{idAssunto}")
-    public ResponseEntity<DadosListagemPlanejadorEstudosDTO> inserePlanejadorEstudos(@PathVariable Long idAssunto, @RequestBody @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
+    public ResponseEntity<?> inserePlanejadorEstudos(@PathVariable Long idAssunto, @RequestBody @Valid DadosCriacaoPlanejadorEstudosDTO dadosCriacaoPlanejadorEstudosDTO, HttpServletRequest request) {
         return planejadorEstudosService.inserePlanejadorEstudos(idAssunto, dadosCriacaoPlanejadorEstudosDTO, request);
     }
 
