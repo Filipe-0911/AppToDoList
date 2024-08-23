@@ -13,6 +13,9 @@ target/
 .springBeans
 .sts4-cache
 
+## migrations
+/src/main/resources/db/migration/*
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

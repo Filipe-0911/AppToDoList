@@ -1,1 +1,0 @@
-alter table assuntos_materia add column (comentarios text);
