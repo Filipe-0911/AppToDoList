@@ -124,6 +124,7 @@ public class PlanejadorEstudosService {
         Usuario usuario = usuarioService.buscaUsuario(request);
         Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(idAssunto);
         Materia materia = assunto.getMateria();
+
         if (usuarioService.verificaSeMateriaPertenceAUsuario(usuario, materia)) {
             PlanejadorEstudos planejadorEstudos = new PlanejadorEstudos(dadosCriacaoPlanejadorEstudosDTO, assunto, usuario);
             // Executa validações

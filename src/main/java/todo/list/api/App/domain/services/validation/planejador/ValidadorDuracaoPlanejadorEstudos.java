@@ -27,8 +27,8 @@ public class ValidadorDuracaoPlanejadorEstudos implements PlanejadorEstudosValid
     }
 
     private boolean isEventInRange(PlanejadorEstudos p, List<PlanejadorEstudos> listaPlanejadorEstudos) {
-        LocalDateTime terminoNovoEvento = p.getDataInicio();
-        LocalDateTime inicioDoNovoEvento = p.getDataTermino();
+        LocalDateTime terminoNovoEvento = p.getDataTermino();
+        LocalDateTime inicioDoNovoEvento = p.getDataInicio();
 
         for (PlanejadorEstudos event : listaPlanejadorEstudos) {
             LocalDateTime planejadorExistenteInicio = event.getDataInicio();
