@@ -1,7 +1,6 @@
 package todo.list.api.App.domain.services.validation.planejador;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 import todo.list.api.App.domain.model.PlanejadorEstudos;
 import todo.list.api.App.domain.repository.PlanejadorEstudosRepository;
