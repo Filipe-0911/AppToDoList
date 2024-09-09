@@ -83,6 +83,6 @@ public class TokenService {
     }
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(6).toInstant(ZoneOffset.of("-03:00"));
     }
 }
