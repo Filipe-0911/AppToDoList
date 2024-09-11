@@ -1,52 +1,44 @@
 package todo.list.api.App.domain.model;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.Valid;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
 
-@Table(name = "questoes")
+import java.util.List;
+
+@Table(name = "questoes_para_responder")
 @Entity(name = "Questao")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Questao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dataPreenchimento;
-
-    private int questoesFeitas;
-    private int questoesAcertadas;
+    @Setter
+    private String textoQuestao;
+    @Setter
+    private String textoRespostaCerta;
 
     @Setter
     @ManyToOne
-    private Assunto assunto;
+    private Materia materia;
 
-    public void setQuestoesFeitas(int questoes) {
-        this.questoesFeitas += questoes;
+    @Setter
+    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<AlternativaQuestao> listaAlternativaQuestao;
+
+    public Questao(DadosCriacaoQuestaoDTO dados) {
+        this.textoQuestao = dados.textoQuestao();
+        this.textoRespostaCerta = dados.respostaCerta();
     }
 
-    public void setQuestoesAcertadas(int questoes) {
-        this.questoesAcertadas += questoes;
+    public void setAlternativa(AlternativaQuestao alternativa) {
+        this.listaAlternativaQuestao.add(alternativa);
     }
 
-    public Questao(@Valid DadosCriacaoQuestaoDTO dadosQuestao) {
-        this.dataPreenchimento = dadosQuestao.dataPreenchimento();
-        this.questoesAcertadas = dadosQuestao.questoesAcertadas();
-        this.questoesFeitas = dadosQuestao.questoesFeitas();
-    }
 }

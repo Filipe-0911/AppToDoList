@@ -3,7 +3,6 @@ package todo.list.api.App.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.qos.logback.core.model.Model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -33,7 +32,7 @@ public class Assunto {
     private String comentarios;
 
     @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<Questao> listaDeQuestoes = new ArrayList<>();
+    private List<EstatisticaQuestao> listaDeQuestoes = new ArrayList<>();
 
     @Setter
     @ManyToOne
@@ -47,8 +46,8 @@ public class Assunto {
         this.quantidadePdf = dadosCriacaoAsssuntoDTO.quantidadePdf();
     }
 
-    public void setQuestoes(Questao questao) {
-        this.listaDeQuestoes.add(questao);
+    public void setQuestoes(EstatisticaQuestao estatisticaQuestao) {
+        this.listaDeQuestoes.add(estatisticaQuestao);
     }
 
     public void setPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {

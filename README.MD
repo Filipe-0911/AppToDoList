@@ -274,7 +274,7 @@ Adiciona questões a uma matéria de uma prova.
   - Conteúdo:
     ```json
     {
-      "$ref": "#/components/schemas/DadosCriacaoQuestaoDTO"
+      "$ref": "#/components/schemas/DadosCriacaoEstatisticaQuestaoDTO"
     }
     ```
 - **Respostas:**
@@ -282,7 +282,7 @@ Adiciona questões a uma matéria de uma prova.
     - Schema:
       ```json
       {
-        "$ref": "#/components/schemas/DadosListagemQuestoesDTO"
+        "$ref": "#/components/schemas/DadosListagemEstatisticaQuestoesDTO"
       }
       ```
 - **Segurança:**

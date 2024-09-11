@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoesDTO;
-import todo.list.api.App.domain.model.Questao;
+import todo.list.api.App.domain.model.EstatisticaQuestao;
 
-public interface QuestaoRepository extends JpaRepository<Questao, Long> {
+public interface EstatisticaQuestaoRepository extends JpaRepository<EstatisticaQuestao, Long> {
 
-    Questao findByDataPreenchimentoAndAssuntoId(LocalDateTime dataPreenchimento, Long assuntoId);
+    EstatisticaQuestao findByDataPreenchimentoAndAssuntoId(LocalDateTime dataPreenchimento, Long assuntoId);
     
     @Query("""
         SELECT 
@@ -24,7 +24,7 @@ public interface QuestaoRepository extends JpaRepository<Questao, Long> {
             sum(q.questoesAcertadas) as questoesCorretas, 
             (sum(q.questoesAcertadas) * 100.0) / sum(q.questoesFeitas) as porcentagem
         )
-        FROM Questao q 
+        FROM EstatisticaQuestao q 
         INNER JOIN q.assunto assunto 
         WHERE q.assunto.id IN :idList
         GROUP BY assunto.nome, date(q.dataPreenchimento)
@@ -32,5 +32,5 @@ public interface QuestaoRepository extends JpaRepository<Questao, Long> {
         """)
     Page<DadosDetalhamentoMediaQuestoesDTO> calcularEstatisticasPorDia(Pageable pageable, List<Long> idList);
 
-    Page<Questao> findAllByAssuntoId(Pageable pageable, Long id);
+    Page<EstatisticaQuestao> findAllByAssuntoId(Pageable pageable, Long id);
 }

@@ -1,12 +1,18 @@
 package todo.list.api.App.domain.dto.questao;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotNull;
+import todo.list.api.App.domain.dto.alternativa.DadosCriacaoAlternativaDTO;
+
+import java.util.List;
 
 public record DadosCriacaoQuestaoDTO(
-    LocalDateTime dataPreenchimento,
-    int questoesAcertadas,
-    int questoesFeitas
+        @NotNull
+        String textoQuestao,
+
+        @NotNull
+        String respostaCerta,
+
+        @NotNull
+        List<DadosCriacaoAlternativaDTO> listaAlternativas
 ) {
-
-
 }

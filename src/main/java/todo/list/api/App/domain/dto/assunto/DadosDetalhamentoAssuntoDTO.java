@@ -3,7 +3,7 @@ package todo.list.api.App.domain.dto.assunto;
 import java.util.List;
 
 import todo.list.api.App.domain.model.Assunto;
-import todo.list.api.App.domain.model.Questao;
+import todo.list.api.App.domain.model.EstatisticaQuestao;
 
 public record DadosDetalhamentoAssuntoDTO(
     Long id,
@@ -25,7 +25,7 @@ public record DadosDetalhamentoAssuntoDTO(
             assunto.getComentarios(),
             assunto.getListaDeQuestoes()
                 .stream()
-                    .map(Questao::getId)
+                    .map(EstatisticaQuestao::getId)
                     .toList()
         );
     }

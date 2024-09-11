@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoesDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosListagemQuestoesDTO;
+import todo.list.api.App.domain.dto.estatistica_questao.DadosCriacaoEstatisticaQuestaoDTO;
+import todo.list.api.App.domain.dto.estatistica_questao.DadosDetalhamentoEstatisticaQuestaoDTO;
+import todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatisticaQuestoesDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Prova;
-import todo.list.api.App.domain.model.Questao;
+import todo.list.api.App.domain.model.EstatisticaQuestao;
 import todo.list.api.App.domain.model.Usuario;
-import todo.list.api.App.domain.repository.QuestaoRepository;
+import todo.list.api.App.domain.repository.EstatisticaQuestaoRepository;
 
 @Service
-public class QuestaoService {
+public class EstatisticaQuestoesService {
     @Autowired
-    private QuestaoRepository questaoRepository;
+    private EstatisticaQuestaoRepository estatisticaQuestaoRepository;
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
@@ -36,22 +36,22 @@ public class QuestaoService {
     @Autowired
     private AssuntoService assuntoService;
 
-    public ResponseEntity<DadosDetalhamentoQuestaoDTO> criarQuestao(Long idMateria, Long idAssunto,HttpServletRequest request, DadosCriacaoQuestaoDTO dadosCriacaoQuestaoDTO) {
+    public ResponseEntity<DadosDetalhamentoEstatisticaQuestaoDTO> adicionarEstatisticaQuestao(Long idMateria, Long idAssunto, HttpServletRequest request, DadosCriacaoEstatisticaQuestaoDTO dadosCriacaoEstatisticaQuestaoDTO) {
         Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(idAssunto);
 
         if (materiaPertenceAoUsuario(idMateria, request)) {
-            Questao questaoBuscada = questaoRepository.findByDataPreenchimentoAndAssuntoId(dadosCriacaoQuestaoDTO.dataPreenchimento(), assunto.getId());
-            if (questaoBuscada != null && assunto.getId().equals(questaoBuscada.getAssunto().getId())) {
-                questaoBuscada.setQuestoesAcertadas(dadosCriacaoQuestaoDTO.questoesAcertadas());
-                questaoBuscada.setQuestoesFeitas(dadosCriacaoQuestaoDTO.questoesFeitas());
-                return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questaoBuscada));
+            EstatisticaQuestao estatisticaQuestaoBuscada = estatisticaQuestaoRepository.findByDataPreenchimentoAndAssuntoId(dadosCriacaoEstatisticaQuestaoDTO.dataPreenchimento(), assunto.getId());
+            if (estatisticaQuestaoBuscada != null && assunto.getId().equals(estatisticaQuestaoBuscada.getAssunto().getId())) {
+                estatisticaQuestaoBuscada.setQuestoesAcertadas(dadosCriacaoEstatisticaQuestaoDTO.questoesAcertadas());
+                estatisticaQuestaoBuscada.setQuestoesFeitas(dadosCriacaoEstatisticaQuestaoDTO.questoesFeitas());
+                return ResponseEntity.ok(new DadosDetalhamentoEstatisticaQuestaoDTO(estatisticaQuestaoBuscada));
             }
-            Questao questaoCriada = new Questao(dadosCriacaoQuestaoDTO);
-            assunto.setQuestoes(questaoCriada);
-            questaoCriada.setAssunto(assunto);
-            questaoRepository.save(questaoCriada);
+            EstatisticaQuestao estatisticaQuestaoCriada = new EstatisticaQuestao(dadosCriacaoEstatisticaQuestaoDTO);
+            assunto.setQuestoes(estatisticaQuestaoCriada);
+            estatisticaQuestaoCriada.setAssunto(assunto);
+            estatisticaQuestaoRepository.save(estatisticaQuestaoCriada);
 
-            return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questaoCriada));
+            return ResponseEntity.ok(new DadosDetalhamentoEstatisticaQuestaoDTO(estatisticaQuestaoCriada));
 
         }
         return ResponseEntity.badRequest().build();
@@ -61,14 +61,14 @@ public class QuestaoService {
         Usuario usuario = usuarioService.buscaUsuario(request);
         List<Long> idAssuntosUsuario = retornaListaIdAssuntosFlat(usuario, idProva);
         if (provaPertenceAoUsuario(idProva, request)) {
-            return ResponseEntity.ok(questaoRepository.calcularEstatisticasPorDia(pageable, idAssuntosUsuario));
+            return ResponseEntity.ok(estatisticaQuestaoRepository.calcularEstatisticasPorDia(pageable, idAssuntosUsuario));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    public ResponseEntity<Page<DadosListagemQuestoesDTO>> buscaQuestoesDoAssunto(Long idMateria, Long idAssunto, HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity<Page<DadosListagemEstatisticaQuestoesDTO>> buscaEstatisticaQuestoesPorAssunto(Long idMateria, Long idAssunto, HttpServletRequest request, Pageable pageable) {
         if (assuntoPertenceAoUsuario(idAssunto, request) && materiaPertenceAoUsuario(idMateria, request)) {
-            return ResponseEntity.ok(questaoRepository.findAllByAssuntoId(pageable, idAssunto).map(DadosListagemQuestoesDTO::new));
+            return ResponseEntity.ok(estatisticaQuestaoRepository.findAllByAssuntoId(pageable, idAssunto).map(todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatisticaQuestoesDTO::new));
         }
         return ResponseEntity.badRequest().build();
     }

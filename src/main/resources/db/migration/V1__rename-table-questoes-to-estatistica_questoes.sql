@@ -1,0 +1,1 @@
+RENAME TABLE questoes to estatisticas_questoes

@@ -29,11 +29,15 @@ public class Materia {
     @Setter
     private String nome;
 
+    @Setter
     @ManyToOne
     private Prova prova;
 
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Assunto> listaAssuntos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Questao> listaQuestoes = new ArrayList<>();
 
     public Materia(DadosCriacaoMateriaDTO dadosMateria) {
         this.nome = dadosMateria.nome();
@@ -41,10 +45,6 @@ public class Materia {
 
     public void setAssunto(Assunto assunto) {
         this.listaAssuntos.add(assunto);
-    }
-
-    public void setProva(Prova prova) {
-        this.prova = prova;
     }
 
     public void deleteAssunto(Assunto assunto) {
@@ -55,6 +55,9 @@ public class Materia {
 
     public void setAssuntos(List<Assunto> assuntos) {
         assuntos.forEach(assunto -> this.setAssunto(assunto));
+    }
+    public void setQuestao(Questao questao) {
+        this.listaQuestoes.add(questao);
     }
     
     
