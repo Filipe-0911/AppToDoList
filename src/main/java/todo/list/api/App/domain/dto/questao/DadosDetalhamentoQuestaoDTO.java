@@ -9,6 +9,7 @@ public record DadosDetalhamentoQuestaoDTO(
         Long id,
         String textoQuestao,
         String respostaCerta,
+        String nomeMateria,
         List<DadosDetalhamentoAlternativaDTO> listaAlternativas
 ) {
     public DadosDetalhamentoQuestaoDTO(Questao questao) {
@@ -16,6 +17,7 @@ public record DadosDetalhamentoQuestaoDTO(
                 questao.getId(),
                 questao.getTextoQuestao(),
                 questao.getTextoRespostaCerta(),
+                questao.getMateria().getNome(),
                 questao.getListaAlternativaQuestao().stream().map(DadosDetalhamentoAlternativaDTO::new).toList()
         );
     }

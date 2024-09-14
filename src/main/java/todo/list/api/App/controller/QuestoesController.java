@@ -3,13 +3,17 @@ package todo.list.api.App.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import todo.list.api.App.domain.dto.alternativa.DadosRespostaQuestaoDTO;
+import todo.list.api.App.domain.dto.questao.DadosAlteracaoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
+import todo.list.api.App.domain.dto.questao.DadosVerificacaoRespostaCertaDTO;
 import todo.list.api.App.domain.model.AlternativaQuestao;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Questao;
@@ -73,10 +77,45 @@ public class QuestoesController {
             alternativasQuestao.forEach(a -> alternativaRepository.save(a));
             questaoRepository.save(questao);
 
-            ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
 
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @Transactional
+    @DeleteMapping("/{idQuestao}")
+    public ResponseEntity<?> deletarQuestao(@PathVariable Long idQuestao, @PathVariable Long idMateria, HttpServletRequest request) {
+        boolean materiaPertenceAoUsuario = __verificaSeMateriaPertenceAoUsuario(idMateria, request);
+        if(materiaPertenceAoUsuario) {
+            Materia materia = materiaService.buscaMateriaEspecifica(idMateria);
+            Questao questao = questaoRepository.getReferenceById(idQuestao);
+            materia.removeQuestao(questao);
+            questaoRepository.delete(questao);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/{idQuestao}")
+    public ResponseEntity<?> verificaSeRespostaEstaCorreta(@PathVariable Long idQuestao, @PathVariable Long idMateria, @RequestBody DadosRespostaQuestaoDTO dados, HttpServletRequest request) {
+        boolean materiaPertenceAoUsuario = __verificaSeMateriaPertenceAoUsuario(idMateria, request);
+
+        if(materiaPertenceAoUsuario) {
+            Questao questao = questaoRepository.getReferenceById(idQuestao);
+            String respostaCerta = questao.getTextoRespostaCerta();
+
+            if (respostaCerta.equalsIgnoreCase(dados.respostaEscolhida())) {
+                return ResponseEntity.ok(new DadosVerificacaoRespostaCertaDTO("Resposta certa.", true));
+            } else {
+                return ResponseEntity.ok(new DadosVerificacaoRespostaCertaDTO("Resposta incorreta.", false));
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    private void __adicionaEstatisticaDeQuestao(boolean acertou, Long idQuestao) {
+        // criar lógica de adição de estatística
     }
 
     private boolean __verificaSeMateriaPertenceAoUsuario(Long idMateria, HttpServletRequest request) {

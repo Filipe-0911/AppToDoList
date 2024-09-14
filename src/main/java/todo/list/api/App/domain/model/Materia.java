@@ -54,10 +54,13 @@ public class Materia {
     }
 
     public void setAssuntos(List<Assunto> assuntos) {
-        assuntos.forEach(assunto -> this.setAssunto(assunto));
+        assuntos.forEach(this::setAssunto);
     }
     public void setQuestao(Questao questao) {
         this.listaQuestoes.add(questao);
+    }
+    public void removeQuestao(Questao questao) {
+        this.listaQuestoes = this.listaQuestoes.stream().filter(q -> !q.getId().equals(questao.getId())).toList();
     }
     
     
