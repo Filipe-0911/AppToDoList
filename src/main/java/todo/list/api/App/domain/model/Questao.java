@@ -21,12 +21,14 @@ public class Questao {
 
     @Setter
     private String textoQuestao;
-    @Setter
-    private String textoRespostaCerta;
 
     @Setter
     @ManyToOne
     private Materia materia;
+
+    @Setter
+    @OneToOne
+    private Assunto assunto;
 
     @Setter
     @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -34,11 +36,13 @@ public class Questao {
 
     public Questao(DadosCriacaoQuestaoDTO dados) {
         this.textoQuestao = dados.textoQuestao();
-        this.textoRespostaCerta = dados.respostaCerta();
     }
 
     public void setAlternativa(AlternativaQuestao alternativa) {
         this.listaAlternativaQuestao.add(alternativa);
     }
 
+    public void deletaAlternativa(AlternativaQuestao alternativa) {
+        this.listaAlternativaQuestao.remove(alternativa);
+    }
 }

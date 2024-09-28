@@ -6,6 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public record DadosRespostaQuestaoDTO(
         @NotNull
         @NotBlank
-        String respostaEscolhida
+        Long idAlternativa
 ) {
 }

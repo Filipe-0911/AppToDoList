@@ -19,10 +19,13 @@ public class AlternativaQuestao {
     private Long id;
 
     private String textoAlternativa;
+
+    private boolean ehCorreta;
     @ManyToOne
     private Questao questao;
 
     public AlternativaQuestao(DadosCriacaoAlternativaDTO dadosCriacaoAlternativaDTO) {
         this.textoAlternativa = dadosCriacaoAlternativaDTO.textoAlternativa();
+        this.ehCorreta = dadosCriacaoAlternativaDTO.ehCorreta();
     }
 }

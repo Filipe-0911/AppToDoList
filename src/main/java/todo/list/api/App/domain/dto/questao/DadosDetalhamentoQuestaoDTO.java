@@ -8,7 +8,6 @@ import java.util.List;
 public record DadosDetalhamentoQuestaoDTO(
         Long id,
         String textoQuestao,
-        String respostaCerta,
         String nomeMateria,
         List<DadosDetalhamentoAlternativaDTO> listaAlternativas
 ) {
@@ -16,9 +15,10 @@ public record DadosDetalhamentoQuestaoDTO(
         this(
                 questao.getId(),
                 questao.getTextoQuestao(),
-                questao.getTextoRespostaCerta(),
                 questao.getMateria().getNome(),
-                questao.getListaAlternativaQuestao().stream().map(DadosDetalhamentoAlternativaDTO::new).toList()
+                questao.getListaAlternativaQuestao().stream()
+                        .sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
+                        .map(DadosDetalhamentoAlternativaDTO::new).toList()
         );
     }
 }

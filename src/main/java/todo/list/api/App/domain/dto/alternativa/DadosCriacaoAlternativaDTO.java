@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record DadosCriacaoAlternativaDTO(
         @NotNull
-        String textoAlternativa
+        String textoAlternativa,
+        @NotNull
+        boolean ehCorreta
 ) {
 }
