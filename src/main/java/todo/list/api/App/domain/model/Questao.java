@@ -20,6 +20,7 @@ public class Questao {
     private Long id;
 
     @Setter
+    @Column(columnDefinition = "TEXT")
     private String textoQuestao;
 
     @Setter

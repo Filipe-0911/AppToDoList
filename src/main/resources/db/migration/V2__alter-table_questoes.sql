@@ -1,0 +1,1 @@
+ALTER TABLE questoes_para_responder MODIFY texto_questao TEXT;
