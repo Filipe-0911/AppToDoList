@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosCriacaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosRespostaQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosAlteracaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosVerificacaoRespostaCertaDTO;
+import todo.list.api.App.domain.dto.questao.*;
 import todo.list.api.App.domain.model.AlternativaQuestao;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Questao;
@@ -49,6 +46,22 @@ public class QuestoesController {
         if(materiaPertenceAoUsuario) {
             List<DadosDetalhamentoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
                     .stream().map(DadosDetalhamentoQuestaoDTO::new).toList();
+
+            if (!questoes.isEmpty()) {
+                return ResponseEntity.ok(pageableService.createPageFromList(questoes, pageable));
+            }
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/editar")
+    public ResponseEntity<?> buscaTodasAsQuestoesParaEditarOuExcluir(@PathVariable Long idMateria , HttpServletRequest request, @PageableDefault(size=1, page=0, sort = {"textoQuestao"}) Pageable pageable) {
+        boolean materiaPertenceAoUsuario = __verificaSeMateriaPertenceAoUsuario(idMateria, request);
+
+        if(materiaPertenceAoUsuario) {
+            List<DadosBuscaParaEdicaoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
+                    .stream().map(DadosBuscaParaEdicaoQuestaoDTO::new).toList();
 
             if (!questoes.isEmpty()) {
                 return ResponseEntity.ok(pageableService.createPageFromList(questoes, pageable));
@@ -114,6 +127,7 @@ public class QuestoesController {
                 List<DadosAlteracaoAlternativaDTO> listaAteracaoAlternativa = dados.listaAlternativas();
                 listaAteracaoAlternativa.forEach(a -> {
                     alternativaRepository.getReferenceById(a.id()).setTextoAlternativa(a.textoAlternativa());
+                    alternativaRepository.getReferenceById(a.id()).setEhCorreta(a.ehCorreta());
                 });
             }
             return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questao));
