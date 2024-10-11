@@ -69,7 +69,7 @@ public class AssuntoController {
         return assuntoService.buscaAssuntoPorNome(nomeAssunto, request);
     }
 
-    @GetMapping("assuntos/idMateria={idMateria}")
+    @GetMapping("assuntos?idMateria={idMateria}")
     public ResponseEntity<?> buscarAssuntoPorIdMateria(@PathVariable Long idMateria, HttpServletRequest request, @PageableDefault(size=5, page=0, sort = {"nome"})Pageable pageable) {
         return assuntoService.buscaAssuntosPorIdMateria(idMateria, request, pageable);
     }

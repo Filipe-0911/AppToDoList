@@ -11,17 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosCriacaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosRespostaQuestaoDTO;
+import todo.list.api.App.domain.dto.estatistica_questao.DadosCriacaoEstatisticaQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.*;
-import todo.list.api.App.domain.model.AlternativaQuestao;
-import todo.list.api.App.domain.model.Materia;
-import todo.list.api.App.domain.model.Questao;
-import todo.list.api.App.domain.model.Usuario;
+import todo.list.api.App.domain.model.*;
 import todo.list.api.App.domain.repository.AlternativaRepository;
 import todo.list.api.App.domain.repository.QuestoesRepository;
-import todo.list.api.App.domain.services.MateriaService;
-import todo.list.api.App.domain.services.PageableService;
-import todo.list.api.App.domain.services.UsuarioService;
+import todo.list.api.App.domain.services.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +35,10 @@ public class QuestoesController {
     private AlternativaRepository alternativaRepository;
     @Autowired
     private PageableService pageableService;
+    @Autowired
+    private AssuntoService assuntoService;
+    @Autowired
+    private EstatisticaQuestoesService estatisticaQuestoesService;
 
     @GetMapping
     public ResponseEntity<?> buscaTodasAsQuestoes(@PathVariable Long idMateria , HttpServletRequest request, @PageableDefault(size=1, page=0, sort = {"textoQuestao"}) Pageable pageable) {
@@ -78,6 +79,13 @@ public class QuestoesController {
         if(materiaPertenceAoUsuario) {
             Materia materia = materiaService.buscaMateriaEspecifica(idMateria);
             Questao questao = new Questao(dados);
+            System.out.println(dados);
+
+            if (dados.idAssunto() != null && !dados.idAssunto().equals(0L)) {
+                Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(dados.idAssunto());
+                questao.setAssunto(assunto);
+                assunto.addQuestoes(questao);
+            }
 
             List<AlternativaQuestao> alternativasQuestao = dados.listaAlternativas().stream()
                     .map(AlternativaQuestao::new).toList();
@@ -168,17 +176,32 @@ public class QuestoesController {
 
         if(materiaPertenceAoUsuario) {
             AlternativaQuestao alternativa = alternativaRepository.getReferenceById(dados.idAlternativa());
+            Questao questao = questaoRepository.getReferenceById(idQuestao);
             if (alternativa.isEhCorreta()) {
+                if(questao.getAssunto() != null) {
+                    __adicionaEstatisticaDeQuestao(true, idMateria, questao.getAssunto().getId(), request);
+                }
                 return ResponseEntity.ok(new DadosVerificacaoRespostaCertaDTO("Resposta certa.", true));
             } else {
+                if(questao.getAssunto() != null) {
+                    __adicionaEstatisticaDeQuestao(false, idMateria, questao.getAssunto().getId(), request);
+                }
                 return ResponseEntity.ok(new DadosVerificacaoRespostaCertaDTO("Resposta incorreta.", false));
             }
         }
         return ResponseEntity.badRequest().build();
     }
 
-    private void __adicionaEstatisticaDeQuestao(boolean acertou, Long idQuestao) {
-        // criar lógica de adição de estatística
+    private void __adicionaEstatisticaDeQuestao(boolean acertou, Long idMateria, Long idAssunto, HttpServletRequest request) {
+        LocalDateTime dataAgora = LocalDateTime.now();
+        DadosCriacaoEstatisticaQuestaoDTO dadosQuestao;
+
+        if (acertou) {
+            dadosQuestao = new DadosCriacaoEstatisticaQuestaoDTO(dataAgora, 1, 1);
+        } else {
+            dadosQuestao = new DadosCriacaoEstatisticaQuestaoDTO(dataAgora, 0, 1);
+        }
+        estatisticaQuestoesService.adicionarEstatisticaQuestao(idMateria, idAssunto, request, dadosQuestao);
     }
 
     private boolean __verificaSeQuestaoEAlternativaPertencemAMateriaEAoUsuario(Long idMateria, Long idQuestao, Long idAlternativa, HttpServletRequest request) {

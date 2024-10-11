@@ -10,6 +10,8 @@ public record DadosAlteracaoQuestaoDTO(
         String textoQuestao,
 
         @NotNull
-        List<DadosAlteracaoAlternativaDTO> listaAlternativas
+        List<DadosAlteracaoAlternativaDTO> listaAlternativas,
+
+        Long idAssunto
 ) {
 }

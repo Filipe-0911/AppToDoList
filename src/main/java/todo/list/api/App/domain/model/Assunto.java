@@ -32,7 +32,11 @@ public class Assunto {
     private String comentarios;
 
     @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<EstatisticaQuestao> listaDeQuestoes = new ArrayList<>();
+    private List<EstatisticaQuestao> listaDeEstatisticaQuestoes = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "assunto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Questao> listaDeQuestoes = new ArrayList<>();
 
     @Setter
     @ManyToOne
@@ -47,7 +51,7 @@ public class Assunto {
     }
 
     public void setQuestoes(EstatisticaQuestao estatisticaQuestao) {
-        this.listaDeQuestoes.add(estatisticaQuestao);
+        this.listaDeEstatisticaQuestoes.add(estatisticaQuestao);
     }
 
     public void setPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {
@@ -56,6 +60,10 @@ public class Assunto {
 
     public void deletaPlanejadorEstudos(PlanejadorEstudos planejadorEstudos) {
         this.listaPlanejadorEstudos.remove(planejadorEstudos);
+    }
+
+    public void addQuestoes(Questao questao) {
+        this.listaDeQuestoes.add(questao);
     }
 
 }

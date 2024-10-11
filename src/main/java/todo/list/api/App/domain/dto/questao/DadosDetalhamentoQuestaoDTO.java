@@ -6,6 +6,7 @@ import todo.list.api.App.domain.model.Questao;
 import java.util.List;
 
 public record DadosDetalhamentoQuestaoDTO(
+        String nomeAssunto,
         Long id,
         String textoQuestao,
         String nomeMateria,
@@ -13,6 +14,7 @@ public record DadosDetalhamentoQuestaoDTO(
 ) {
     public DadosDetalhamentoQuestaoDTO(Questao questao) {
         this(
+                questao.getAssunto() != null ? questao.getAssunto().getNome() : null,
                 questao.getId(),
                 questao.getTextoQuestao(),
                 questao.getMateria().getNome(),

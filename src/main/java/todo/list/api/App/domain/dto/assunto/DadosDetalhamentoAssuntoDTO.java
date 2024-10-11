@@ -23,7 +23,7 @@ public record DadosDetalhamentoAssuntoDTO(
             assunto.getNome(),
             assunto.getQuantidadePdf(),
             assunto.getComentarios(),
-            assunto.getListaDeQuestoes()
+            assunto.getListaDeEstatisticaQuestoes()
                 .stream()
                     .map(EstatisticaQuestao::getId)
                     .toList()
