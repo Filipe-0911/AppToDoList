@@ -61,8 +61,8 @@ public class QuestoesController {
         boolean materiaPertenceAoUsuario = __verificaSeMateriaPertenceAoUsuario(idMateria, request);
 
         if(materiaPertenceAoUsuario) {
-            List<DadosBuscaParaEdicaoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
-                    .stream().map(DadosBuscaParaEdicaoQuestaoDTO::new).toList();
+            List<DadosDetalhamentoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
+                    .stream().map(DadosDetalhamentoQuestaoDTO::new).toList();
 
             if (!questoes.isEmpty()) {
                 return ResponseEntity.ok(pageableService.createPageFromList(questoes, pageable));
@@ -130,6 +130,11 @@ public class QuestoesController {
             Questao questao = questaoRepository.getReferenceById(idQuestao);
             if (dados.textoQuestao() != null) {
                 questao.setTextoQuestao(dados.textoQuestao());
+            }
+            if (dados.idAssunto() != null) {
+                Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(dados.idAssunto());
+                questao.setAssunto(assunto);
+                assunto.addQuestoes(questao);
             }
             if (dados.listaAlternativas() != null && !dados.listaAlternativas().isEmpty()) {
                 List<DadosAlteracaoAlternativaDTO> listaAteracaoAlternativa = dados.listaAlternativas();
