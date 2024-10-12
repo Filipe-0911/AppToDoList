@@ -66,4 +66,7 @@ public class Assunto {
         this.listaDeQuestoes.add(questao);
     }
 
+    public void removeQuestao(Questao questao) {
+        this.listaDeQuestoes.remove(questao);
+    }
 }
