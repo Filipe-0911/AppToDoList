@@ -17,7 +17,7 @@ public class AlternativaQuestao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(columnDefinition = "TEXT")
     private String textoAlternativa;
 
     private boolean ehCorreta;
