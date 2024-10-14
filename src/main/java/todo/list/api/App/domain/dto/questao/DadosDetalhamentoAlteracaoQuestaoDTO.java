@@ -22,7 +22,7 @@ public record DadosDetalhamentoAlteracaoQuestaoDTO(
                 questao.getListaAlternativaQuestao().stream()
                         .sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
                         .map(DadosAlteracaoAlternativaDTO::new).toList(),
-                new DadosDetalhamentoAssuntoAlteracaoQuestaoDTO(questao.getAssunto())
+                questao.getAssunto() != null ? new DadosDetalhamentoAssuntoAlteracaoQuestaoDTO(questao.getAssunto()) : null
         );
     }
 }
