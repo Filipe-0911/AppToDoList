@@ -13,10 +13,7 @@ import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosCriacaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosRespostaQuestaoDTO;
 import todo.list.api.App.domain.dto.estatistica_questao.DadosCriacaoEstatisticaQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosAlteracaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosCriacaoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosDetalhamentoQuestaoDTO;
-import todo.list.api.App.domain.dto.questao.DadosVerificacaoRespostaCertaDTO;
+import todo.list.api.App.domain.dto.questao.*;
 import todo.list.api.App.domain.model.*;
 import todo.list.api.App.domain.repository.AlternativaRepository;
 import todo.list.api.App.domain.repository.QuestoesRepository;
@@ -63,8 +60,8 @@ public class QuestoesService {
         boolean materiaPertenceAoUsuario = __verificaSeMateriaPertenceAoUsuario(idMateria, request);
 
         if(materiaPertenceAoUsuario) {
-            List<DadosDetalhamentoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
-                    .stream().map(DadosDetalhamentoQuestaoDTO::new).toList();
+            List<DadosDetalhamentoAlteracaoQuestaoDTO> questoes = questaoRepository.findAllByMateriaId(idMateria)
+                    .stream().map(DadosDetalhamentoAlteracaoQuestaoDTO::new).toList();
 
             if (!questoes.isEmpty()) {
                 return ResponseEntity.ok(pageableService.createPageFromList(questoes, pageable));
@@ -145,7 +142,7 @@ public class QuestoesService {
                     alternativaRepository.getReferenceById(a.id()).setEhCorreta(a.ehCorreta());
                 });
             }
-            return ResponseEntity.ok(new DadosDetalhamentoQuestaoDTO(questao));
+            return ResponseEntity.ok(new DadosDetalhamentoAlteracaoQuestaoDTO(questao));
         }
         return ResponseEntity.badRequest().build();
     }
