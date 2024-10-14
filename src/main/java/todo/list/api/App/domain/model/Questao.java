@@ -28,7 +28,7 @@ public class Questao {
     private Materia materia;
 
     @Setter
-    @OneToOne
+    @ManyToOne
     private Assunto assunto;
 
     @Setter
