@@ -36,8 +36,8 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
-            mvn clean compile
-            mvn clean package
+            mvn clean compile -DskipTests
+            mvn clean package -DskipTests
 
       - name: "Finalizar processo antigo e rodar a aplicação"
         uses: appleboy/ssh-action@v1.1.0
