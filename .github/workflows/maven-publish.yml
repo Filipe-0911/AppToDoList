@@ -1,0 +1,60 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Maven Package
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: "Baixar o código"
+        uses: actions/checkout@v4
+
+      - name: "Copiar arquivos para VPS"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST_VPS }}
+          username: ${{ secrets.USER_VPS }}
+          password: ${{ secrets.PASSWORD }}
+          source: "tests/a.txt,tests/b.txt"
+          target: "/AppToDoList"
+
+      - name: "Build da aplicação"
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST_VPS }}
+          username: ${{ secrets.USER_VPS }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /AppToDoList
+            mvn clean compile
+            mvn clean package
+
+      - name: "Finalizar processo antigo e rodar a aplicação"
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST_VPS }}
+          username: ${{ secrets.USER_VPS }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /AppToDoList
+            # Verificar e finalizar o processo antigo que está rodando o .jar
+            JAR_PID=$(ps aux | grep 'App-0.0.1-SNAPSHOT.jar' | grep -v grep | awk '{print $2}')
+            if [ -n "$JAR_PID" ]; then
+              echo "Finalizando o processo antigo com PID: $JAR_PID"
+              kill -9 $JAR_PID
+            else
+              echo "Nenhum processo antigo encontrado"
+            fi
+            
+            # Rodar nova versão da aplicação usando nohup
+            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
