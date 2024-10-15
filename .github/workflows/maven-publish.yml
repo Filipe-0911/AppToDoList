@@ -25,7 +25,7 @@ jobs:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
           password: ${{ secrets.PASSWORD }}
-          source: "tests/a.txt,tests/b.txt"
+          source: "."
           target: "/AppToDoList"
 
       - name: "Build da aplicação"
