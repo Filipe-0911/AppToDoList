@@ -54,10 +54,6 @@ jobs:
             else
               echo "Nenhum processo antigo encontrado"
             fi
-            
-            # Rodar nova versão da aplicação usando nohup
-            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
-            - name: "Finalizar processo antigo"
 
       - name: "Rodar aplicação"
         uses: appleboy/ssh-action@v1.1.0
