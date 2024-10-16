@@ -18,14 +18,24 @@ jobs:
         with:
           ssh-key: ${{ secrets.VPS_SSH }}
 
+#      - name: "Copiar arquivos para VPS"
+#        uses: appleboy/scp-action@v0.1.7
+#        with:
+#          host: ${{ secrets.HOST_VPS }}
+#          username: ${{ secrets.USER_VPS }}
+#          password: ${{ secrets.PASSWORD }}
+#          source: "." #
+#          target: "/AppToDoList"
+
       - name: "Copiar arquivos para VPS"
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
           password: ${{ secrets.PASSWORD }}
-          source: "." #
-          target: "/AppToDoList"
+          script: |
+            cd /AppToDoList
+            git pull
 
       - name: "Build da aplicação"
         uses: appleboy/ssh-action@v1.1.0
@@ -56,4 +66,4 @@ jobs:
             fi
             
             # Rodar nova versão da aplicação usando nohup
-            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
+            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
