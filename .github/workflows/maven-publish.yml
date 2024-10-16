@@ -16,33 +16,23 @@ jobs:
       - name: "Baixar o código"
         uses: actions/checkout@v4
         with:
-          ssh-key: ${{ secrets.VPS_SSH }}
-
-#      - name: "Copiar arquivos para VPS"
-#        uses: appleboy/scp-action@v0.1.7
-#        with:
-#          host: ${{ secrets.HOST_VPS }}
-#          username: ${{ secrets.USER_VPS }}
-#          password: ${{ secrets.PASSWORD }}
-#          source: "." #
-#          target: "/AppToDoList"
+          ssh-key: ${{ secrets.VPS_SSH }} # Chave SSH privada
 
       - name: "Copiar arquivos para VPS"
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/scp-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd /AppToDoList
-            git pull
+          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
+          source: "." # Ajuste para o caminho correto dos arquivos
+          target: "/AppToDoList"
 
       - name: "Build da aplicação"
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
           script: |
             cd /AppToDoList
             mvn clean compile -DskipTests
@@ -53,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
           script: |
             cd /AppToDoList
             # Verificar e finalizar o processo antigo que está rodando o .jar
