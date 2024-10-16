@@ -54,6 +54,8 @@ jobs:
             else
               echo "Nenhum processo antigo encontrado"
             fi
+            
+            sleep 5
 
       - name: "Rodar aplicação"
         uses: appleboy/ssh-action@v1.1.0
@@ -64,3 +66,4 @@ jobs:
           script: |
             cd /AppToDoList
             nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+
