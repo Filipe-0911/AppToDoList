@@ -19,12 +19,12 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
 
       - name: "Copiar arquivos para VPS"
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/scp-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
           key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
-          source: "."
+          source: "path/to/your/files/*" # Ajuste para o caminho correto dos arquivos
           target: "/AppToDoList"
 
       - name: "Build da aplicação"
