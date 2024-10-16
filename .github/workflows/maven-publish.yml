@@ -16,15 +16,15 @@ jobs:
       - name: "Baixar o código"
         uses: actions/checkout@v4
         with:
-          ssh-key: ${{ secrets.VPS_SSH }} # Chave SSH privada
+          ssh-key: ${{ secrets.VPS_SSH }}
 
       - name: "Copiar arquivos para VPS"
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
-          source: "." # Ajuste para o caminho correto dos arquivos
+          password: ${{ secrets.PASSWORD }}
+          source: "."
           target: "/AppToDoList"
 
       - name: "Build da aplicação"
@@ -32,7 +32,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
+          password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
             mvn clean compile -DskipTests
@@ -43,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          key: ${{ secrets.VPS_SSH }} # Chave SSH privada
+          password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
             # Verificar e finalizar o processo antigo que está rodando o .jar
