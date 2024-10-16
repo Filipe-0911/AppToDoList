@@ -1,6 +1,3 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
-
 name: Maven Package
 
 on:
@@ -16,22 +13,26 @@ jobs:
       packages: write
 
     steps:
+      - name: "Baixar o código"
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
+
       - name: "Copiar arquivos para VPS"
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/scp-action@v1.1.0  # Usar SCP para copiar arquivos
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd /AppToDoList
-            git pull
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
+          source: "."
+          target: "/AppToDoList"
 
       - name: "Build da aplicação"
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
           script: |
             cd /AppToDoList
             mvn clean compile -DskipTests
@@ -42,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
           script: |
             cd /AppToDoList
             # Verificar e finalizar o processo antigo que está rodando o .jar
