@@ -19,7 +19,7 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }} # Chave SSH privada
 
       - name: "Copiar arquivos para VPS"
-        uses: appleboy/scp-action@v1.1.0  # Usar SCP para copiar arquivos
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
           username: ${{ secrets.USER_VPS }}
