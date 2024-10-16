@@ -38,7 +38,7 @@ jobs:
             mvn clean compile -DskipTests
             mvn clean package -DskipTests
 
-      - name: "Finalizar processo antigo e rodar a aplicação"
+      - name: "Finalizar processo antigo"
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
@@ -56,4 +56,15 @@ jobs:
             fi
             
             # Rodar nova versão da aplicação usando nohup
+            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+            - name: "Finalizar processo antigo"
+
+      - name: "Rodar aplicação"
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST_VPS }}
+          username: ${{ secrets.USER_VPS }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /AppToDoList
             nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
