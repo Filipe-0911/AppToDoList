@@ -22,19 +22,27 @@ import todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatistica
 import todo.list.api.App.domain.services.EstatisticaQuestoesService;
 
 @RestController
-@RequestMapping("provas/{idProva}/materias/{idMateria}/assuntos/{idAssunto}/estatisticas")
+@RequestMapping("provas/{idProva}/materias/{idMateria}")
 @SecurityRequirement(name =  "bearer-key")
 public class EstatisticasQuestoesController {
     @Autowired
     private EstatisticaQuestoesService estatisticaQuestoesService;
 
     @Transactional
-    @PostMapping
+    @PostMapping("/assuntos/{idAssunto}/estatisticas")
     public ResponseEntity<DadosDetalhamentoEstatisticaQuestaoDTO> adicionaEstatisticaQuestoes(@PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request, @RequestBody @Valid DadosCriacaoEstatisticaQuestaoDTO dadosCriacaoEstatisticaQuestaoDTO) {
         return estatisticaQuestoesService.adicionarEstatisticaQuestao(idMateria, idAssunto, request, dadosCriacaoEstatisticaQuestaoDTO);
     }
-    @GetMapping
+    @GetMapping("/assuntos/{idAssunto}/estatisticas")
     public ResponseEntity<Page<DadosListagemEstatisticaQuestoesDTO>> buscaEstatisticaQuestoes(@PageableDefault(size=5, page=0, sort = {"dataPreenchimento"}) Pageable pageable, @PathVariable Long idMateria, @PathVariable Long idAssunto, HttpServletRequest request) {
-        return estatisticaQuestoesService.buscaEstatisticaQuestoesPorAssunto(idMateria, idAssunto, request, pageable);
+        return estatisticaQuestoesService.buscaEstatisticaQuestoesPorAssuntoAoLongoDoTempo(idMateria, idAssunto, request, pageable);
+    }
+    @GetMapping("/estatisticas/buscaPorMateria")
+    public ResponseEntity<?> buscaEstatisticaPorMateria(@PathVariable Long idMateria, HttpServletRequest request) {
+        return estatisticaQuestoesService.buscaEstatisticaQuestoesPorMateria(idMateria, request);
+    }
+    @GetMapping("/assuntos/{idAssunto}/estatisticas/buscaPorAssunto")
+    public ResponseEntity<?> buscaEstatisticaPorAssunto(@PathVariable Long idMateria, @PathVariable Long idAssunto , HttpServletRequest request) {
+        return estatisticaQuestoesService.buscaEstatisticaQuestoesPorAssunto(idMateria, idAssunto, request);
     }
 }

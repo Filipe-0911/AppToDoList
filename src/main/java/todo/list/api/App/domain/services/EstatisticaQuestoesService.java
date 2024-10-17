@@ -1,6 +1,7 @@
 package todo.list.api.App.domain.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoes
 import todo.list.api.App.domain.dto.estatistica_questao.DadosCriacaoEstatisticaQuestaoDTO;
 import todo.list.api.App.domain.dto.estatistica_questao.DadosDetalhamentoEstatisticaQuestaoDTO;
 import todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatisticaQuestoesDTO;
+import todo.list.api.App.domain.dto.mediaquestoes.MediaQuestoesPorAssuntoDTO;
+import todo.list.api.App.domain.dto.mediaquestoes.MediaQuestoesPorMateriaDTO;
 import todo.list.api.App.domain.model.Assunto;
 import todo.list.api.App.domain.model.Materia;
 import todo.list.api.App.domain.model.Prova;
@@ -66,7 +69,7 @@ public class EstatisticaQuestoesService {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    public ResponseEntity<Page<DadosListagemEstatisticaQuestoesDTO>> buscaEstatisticaQuestoesPorAssunto(Long idMateria, Long idAssunto, HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity<Page<DadosListagemEstatisticaQuestoesDTO>> buscaEstatisticaQuestoesPorAssuntoAoLongoDoTempo(Long idMateria, Long idAssunto, HttpServletRequest request, Pageable pageable) {
         if (assuntoPertenceAoUsuario(idAssunto, request) && materiaPertenceAoUsuario(idMateria, request)) {
             return ResponseEntity.ok(estatisticaQuestaoRepository.findAllByAssuntoId(pageable, idAssunto).map(todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatisticaQuestoesDTO::new));
         }
@@ -94,5 +97,32 @@ public class EstatisticaQuestoesService {
     private boolean provaPertenceAoUsuario(Long idProva, HttpServletRequest request) {
         Prova prova = provaService.buscaProvaPeloId(idProva);
         return usuarioService.verificaSeProvaPertenceAUsuario(request, prova);
+    }
+
+    public ResponseEntity<?> buscaEstatisticaQuestoesPorMateria(Long idMateria, HttpServletRequest request) {
+        if (materiaPertenceAoUsuario(idMateria, request)) {
+            Optional <MediaQuestoesPorMateriaDTO> mediaPorMateria =  estatisticaQuestaoRepository.buscarMediaQuestoesPorMateria(idMateria);
+
+            if(mediaPorMateria.isPresent()) {
+                return ResponseEntity.ok(mediaPorMateria.get());
+            }
+            Materia materia = materiaService.buscaMateriaEspecifica(idMateria);
+
+            return ResponseEntity.ok(new MediaQuestoesPorMateriaDTO(0L, 0L, 0.0, materia.getId(), materia.getNome()));
+        }
+        return ResponseEntity.status(400).body("Matéria ou Assunto não pertencem ao usuário");
+    }
+
+    public ResponseEntity<?> buscaEstatisticaQuestoesPorAssunto(Long idMateria, Long idAssunto, HttpServletRequest request) {
+        if (assuntoPertenceAoUsuario(idAssunto, request) && materiaPertenceAoUsuario(idMateria, request)) {
+            Optional <MediaQuestoesPorAssuntoDTO> mediaPorAssunto =  estatisticaQuestaoRepository.buscaMediaQuestoesPorAssunto(idAssunto);
+
+            if(mediaPorAssunto.isPresent()) {
+                return ResponseEntity.ok(mediaPorAssunto.get());
+            }
+            Assunto assunto = assuntoService.buscarAssuntoEspecificoSemParametrosDePath(idAssunto);
+            return ResponseEntity.ok(new MediaQuestoesPorAssuntoDTO(assunto.getId(),assunto.getNome(), 0L, 0L,  0.0));
+        }
+        return ResponseEntity.status(400).body("Matéria ou Assunto não pertencem ao usuário");
     }
 }
