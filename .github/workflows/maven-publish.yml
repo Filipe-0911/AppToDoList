@@ -57,7 +57,7 @@ jobs:
             
             sleep 5
 
-      - name: "Rodar aplicação"
+      - name: "Rodar aplicação em background"
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST_VPS }}
@@ -65,7 +65,14 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
-            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.txt 2>&1 &
-            disown
-
-
+            echo "Iniciando aplicação em background com nohup..."
+            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > /AppToDoList/output.log 2>&1 &
+            echo $! > /AppToDoList/app.pid
+            sleep 3
+            if ps -p $(cat /AppToDoList/app.pid) > /dev/null
+            then
+              echo "Aplicação iniciada com sucesso, PID: $(cat /AppToDoList/app.pid)"
+            else
+              echo "Falha ao iniciar a aplicação"
+              cat /AppToDoList/output.log
+            fi
