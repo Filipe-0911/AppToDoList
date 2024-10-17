@@ -65,5 +65,10 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
+            # Certificar que o nohup está rodando corretamente
+            echo "Iniciando aplicação com nohup..."
             nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+            disown
+            echo "Aplicação iniciada. Logs disponíveis em output.log."
+
 
