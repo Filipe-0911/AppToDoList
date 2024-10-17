@@ -1,78 +1,40 @@
-name: Maven Package
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [master]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
-      - name: "Baixar o código"
-        uses: actions/checkout@v4
-        with:
-          ssh-key: ${{ secrets.VPS_SSH }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: "Copiar arquivos para VPS"
-        uses: appleboy/scp-action@v0.1.7
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
         with:
-          host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
-          source: "."
-          target: "/AppToDoList"
+          java-version: '17'
 
-      - name: "Build da aplicação"
-        uses: appleboy/ssh-action@v1.1.0
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Copy and execute deploy script
+        uses: appleboy/scp-action@v0.1.0
         with:
-          host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./deploy.sh"
+          target: "/AppToDoList/"
+
+      - name: Run deploy script
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /AppToDoList
-            mvn clean compile -DskipTests
-            mvn clean package -DskipTests
-
-      - name: "Finalizar processo antigo"
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd /AppToDoList
-            # Verificar e finalizar o processo antigo que está rodando o .jar
-            JAR_PID=$(ps aux | grep 'App-0.0.1-SNAPSHOT.jar' | grep -v grep | awk '{print $2}')
-            if [ -n "$JAR_PID" ]; then
-              echo "Finalizando o processo antigo com PID: $JAR_PID"
-              kill -9 $JAR_PID
-            else
-              echo "Nenhum processo antigo encontrado"
-            fi
-            
-            sleep 5
-
-      - name: "Rodar aplicação em background"
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USER_VPS }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd /AppToDoList
-            echo "Iniciando aplicação em background com nohup..."
-            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > /AppToDoList/output.log 2>&1 &
-            echo $! > /AppToDoList/app.pid
-            sleep 3
-            if ps -p $(cat /AppToDoList/app.pid) > /dev/null
-            then
-              echo "Aplicação iniciada com sucesso, PID: $(cat /AppToDoList/app.pid)"
-            else
-              echo "Falha ao iniciar a aplicação"
-              cat /AppToDoList/output.log
-            fi
+            ./deploy.sh
