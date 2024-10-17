@@ -65,7 +65,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd /AppToDoList
-            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+            nohup java -jar target/App-0.0.1-SNAPSHOT.jar > output.txt 2>&1 &
             disown
 
 
