@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MediaQuestoesPorMateriaDTO {
-    private Long questoesCorretas;
-    private Long questoesRespondidas;
-    private Double porcentagemAcertoMateria;
     private Long idMateria;
     private String nome;
-
+    private Long questoesRespondidas;
+    private Long questoesCorretas;
+    private Double porcentagemAcertoMateria;
+    
     public MediaQuestoesPorMateriaDTO(Long questoesCorretas, Long questoesRespondidas, Double porcentagemAcertoMateria, Long idMateria, String nome) {
         this.questoesCorretas = questoesCorretas;
         this.questoesRespondidas = questoesRespondidas;
