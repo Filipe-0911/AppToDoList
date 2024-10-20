@@ -113,6 +113,11 @@ public class EstatisticaQuestoesService {
         return ResponseEntity.status(400).body("Matéria ou Assunto não pertencem ao usuário");
     }
 
+    public MediaQuestoesPorAssuntoDTO buscaEstatisticaPorAssuntoId(Long idAssunto) {
+        Optional<MediaQuestoesPorAssuntoDTO> mediaQuestoesPorAssuntoDTO = estatisticaQuestaoRepository.buscaMediaQuestoesPorAssunto(idAssunto);
+        return mediaQuestoesPorAssuntoDTO.orElse(null);
+    }
+
     public ResponseEntity<?> buscaEstatisticaQuestoesPorAssunto(Long idMateria, Long idAssunto, HttpServletRequest request) {
         if (assuntoPertenceAoUsuario(idAssunto, request) && materiaPertenceAoUsuario(idMateria, request)) {
             Optional <MediaQuestoesPorAssuntoDTO> mediaPorAssunto =  estatisticaQuestaoRepository.buscaMediaQuestoesPorAssunto(idAssunto);

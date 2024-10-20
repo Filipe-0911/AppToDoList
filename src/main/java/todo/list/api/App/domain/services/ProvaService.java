@@ -16,6 +16,7 @@ import todo.list.api.App.domain.dto.prova.DadosDetalhamentoProvaDTO;
 import todo.list.api.App.domain.dto.prova.DadosListagemProvaDTO;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.model.Usuario;
+import todo.list.api.App.domain.repository.EstatisticaQuestaoRepository;
 import todo.list.api.App.domain.repository.ProvaRepository;
 
 @Service
@@ -25,6 +26,8 @@ public class ProvaService {
     private ProvaRepository provaRepository;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private EstatisticaQuestaoRepository estatisticaQuestaoRepository;
 
     public ResponseEntity<Page<DadosListagemProvaDTO>> buscarProvas(@PageableDefault(size = 10, page = 0, sort = {"dataDaProva"}) Pageable pageable, HttpServletRequest request) {
         Long id = usuarioService.buscaUsuario(request).getId();
@@ -58,7 +61,7 @@ public class ProvaService {
         Prova prova = provaRepository.getReferenceById(idProva);
 
         if (__listaUsuarioContemProvaBuscada(usuario.getProvas(), prova)) {
-            return ResponseEntity.ok(new DadosDetalhamentoProvaDTO(prova));
+            return ResponseEntity.ok(new DadosDetalhamentoProvaDTO(prova, estatisticaQuestaoRepository));
         }
         return ResponseEntity.badRequest().build();
     }
