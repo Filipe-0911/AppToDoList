@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .  # Caminho onde o Dockerfile está localizado
+    container_name: app
+    ports:
+      - "8080:8080"  # Porta da aplicação mapeada para o host
+    depends_on:
+      - db  # Garante que o db inicie antes
+    volumes:
+      - ./target:/app  # Mapeia os arquivos do target para o container
+    working_dir: /app
+    environment:
+      - APP_JAR_PATH=${APP_JAR_PATH}
+      - DB_HOST_PORT=${DB_HOST_PORT}  # Passando a URL do banco de dados
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    command: ["java", "-jar", "${APP_JAR_PATH}"]
+
+  db:
+    image: mysql:8.0.28
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
