@@ -54,5 +54,4 @@ public class Prova {
         this.listaDeMaterias = this.listaDeMaterias.stream()
             .filter(materiaDaLista -> !materiaDaLista.equals(materia)).toList();
     }
-
 }

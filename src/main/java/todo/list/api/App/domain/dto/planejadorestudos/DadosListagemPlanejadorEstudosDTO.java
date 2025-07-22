@@ -25,7 +25,7 @@ public record DadosListagemPlanejadorEstudosDTO(
                 planejadorEstudos.getAssunto().getMateria().getProva().getId(),
                 planejadorEstudos.getDataTermino(),
                 planejadorEstudos.getAssunto().getNome(),
-                new DadosUsuarioDTO(planejadorEstudos.getUsuario()).id(),
+                planejadorEstudos.getUsuario().getId(),
                 planejadorEstudos.getAssunto().getMateria().getProva().getHexadecimalCorProva()
             );
     }
