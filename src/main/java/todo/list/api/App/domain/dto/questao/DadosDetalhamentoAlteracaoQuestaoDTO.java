@@ -1,7 +1,6 @@
 package todo.list.api.App.domain.dto.questao;
 
 import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
-import todo.list.api.App.domain.dto.alternativa.DadosDetalhamentoAlternativaDTO;
 import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoAlteracaoQuestaoDTO;
 import todo.list.api.App.domain.model.Questao;
 

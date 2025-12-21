@@ -11,7 +11,6 @@ public record DadosUsuarioDTO(
         @Nullable
         DadosTokenJWT token
 ) {
-    @Deprecated
     public DadosUsuarioDTO(Usuario usuario) {
 
         this(usuario.getId(), usuario.getLogin(), usuario.getNome(), null);

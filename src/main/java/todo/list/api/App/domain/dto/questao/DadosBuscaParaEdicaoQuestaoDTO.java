@@ -1,7 +1,6 @@
 package todo.list.api.App.domain.dto.questao;
 
 import todo.list.api.App.domain.dto.alternativa.DadosBuscaParaEdicaoAlternativaDTO;
-import todo.list.api.App.domain.dto.alternativa.DadosDetalhamentoAlternativaDTO;
 import todo.list.api.App.domain.model.Questao;
 
 import java.util.List;

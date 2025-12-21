@@ -2,8 +2,6 @@ package todo.list.api.App.domain.dto.questao;
 
 import jakarta.validation.constraints.NotNull;
 import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
-import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoAlteracaoQuestaoDTO;
-import todo.list.api.App.domain.dto.assunto.DadosDetalhamentoAssuntoDTO;
 import todo.list.api.App.domain.model.Questao;
 
 import java.util.List;

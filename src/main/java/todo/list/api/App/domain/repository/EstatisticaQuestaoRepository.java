@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import todo.list.api.App.domain.dto.estatistica_questao.DadosListagemEstatisticaQuestoesDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.DadosDetalhamentoMediaQuestoesDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.MediaQuestoesPorAssuntoDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.MediaQuestoesPorMateriaDTO;

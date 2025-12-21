@@ -8,38 +8,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import todo.list.api.App.domain.dto.alternativa.DadosAlteracaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosCriacaoAlternativaDTO;
 import todo.list.api.App.domain.dto.alternativa.DadosRespostaQuestaoDTO;
-import todo.list.api.App.domain.dto.estatistica_questao.DadosCriacaoEstatisticaQuestaoDTO;
 import todo.list.api.App.domain.dto.questao.*;
-import todo.list.api.App.domain.model.*;
-import todo.list.api.App.domain.repository.AlternativaRepository;
-import todo.list.api.App.domain.repository.QuestoesRepository;
 import todo.list.api.App.domain.services.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/provas/{idProva}/materias/{idMateria}/questoes")
 public class QuestoesController {
-    @Autowired
-    private QuestoesRepository questaoRepository;
-    @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
-    private MateriaService materiaService;
-    @Autowired
-    private AlternativaRepository alternativaRepository;
-    @Autowired
-    private PageableService pageableService;
-    @Autowired
-    private AssuntoService assuntoService;
-    @Autowired
-    private EstatisticaQuestoesService estatisticaQuestoesService;
-
     @Autowired
     private QuestoesService questoesService;
 

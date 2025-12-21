@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import todo.list.api.App.domain.dto.usuario.DadosCriacaoUsuarioDTO;
 import todo.list.api.App.domain.model.Usuario;
@@ -20,13 +19,11 @@ public class UsuarioTest {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private TestEntityManager em;
+
 
     @Test
     @DisplayName("Deverá salvar um usuario no banco")
     public void deveraCriarUsuario() {
-        Long id = 1L;
         String login = "fulano@xpto.com";
         String nome = "Fulano de Tal";
         String senha = "senha123Xpto@";
