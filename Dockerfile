@@ -1,17 +1,21 @@
-# Imagem base com Maven + JDK 17
-FROM maven:3.9.2-eclipse-temurin-17
-
-# Diretório de trabalho dentro do container
+# Fase de build
+FROM maven:3.9.2-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copia todos os arquivos do projeto para dentro do container
+# Copia todos os arquivos do projeto
 COPY . .
 
-# Instala dependências e gera o JAR
+# Build do JAR sem testes
 RUN mvn clean package -DskipTests
 
-# Expõe a porta do Spring Boot
+# Fase de runtime
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+
+# Copia o JAR buildado
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Comando para rodar a aplicação
-CMD ["java", "-jar", "target/App-0.0.1-SNAPSHOT.jar"]
+# Inicia a aplicação
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -15,10 +15,10 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // 🔥 Frontend Vite
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        // Agora aceita qualquer origem (bom para dev e proxy interno)
+        config.setAllowedOrigins(List.of("*"));
 
-        // 🔥 Métodos usados pelo React
+        // Métodos usados pelo frontend
         config.setAllowedMethods(List.of(
                 "GET",
                 "POST",
@@ -27,10 +27,10 @@ public class CorsConfig {
                 "OPTIONS"
         ));
 
-        // 🔥 Headers (Authorization é essencial)
+        // Headers permitidos
         config.setAllowedHeaders(List.of("*"));
 
-        // 🔥 Necessário quando usa token
+        // Necessário quando usa token
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
