@@ -37,3 +37,6 @@ build/
 
 ### Variaveis Ambiente ###
 .env
+
+### shell script ###
+*.sh

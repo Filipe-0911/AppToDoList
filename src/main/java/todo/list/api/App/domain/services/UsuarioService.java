@@ -41,6 +41,7 @@ public class UsuarioService {
         validadorUsuario.forEach(u -> u.validar(dadosCriacaoUsuarioDTO));
         Usuario usuario = new Usuario(dadosCriacaoUsuarioDTO);
         usuarioRepository.save(usuario);
+
         return ResponseEntity.ok(new DadosUsuarioDTO(usuario));
     }
 

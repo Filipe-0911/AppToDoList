@@ -7,7 +7,19 @@ Além disso, ainda pode inserir a quantidade de questões que fez/acertou em det
 **Email:** fbianchi.andrade@gmail.com  
 **Licença:** [Apache 2.0](http://to-do.list/api/licenca)
 
-**Antes de tudo, faça o login, pegue o token JWT retornado e insira no cabeçalho das requisições com a chave "Authorization"!**
+**Antes de tudo, faça o login, defina as variáveis de ambiente da seguinte forma**
+DB_HOST_PORT=jdbc:mysql://mysql:3306/todolist
+**A porta do banco deve ser feita da seguinte forma:**
+**API_DE_ACESSO_AO_BANCO:NOME_SGBD://NOME_SGBD:PORTA_SGBD/NOME_DO_SCHEMA**
+
+DB_USERNAME=nome_usuario_banco
+DB_PASSWORD=senha_usuario_banco
+JWT_SECRET=salt_do_jwt
+
+MYSQL_ROOT_PASSWORD=senha_usuario_banco
+MYSQL_DATABASE=NOME_DO_SCHEMA
+
+**Insira o token JWT retornado e insira no cabeçalho das requisições com a chave "Authorization"!**
 
 ## Endpoints
 
