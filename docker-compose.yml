@@ -3,6 +3,8 @@ version: "3.9"
 services:
   mysql:
     image: mysql:8.0
+    mem_limit: 4g
+    cpus: 1
     container_name: mysql_db
     env_file:
       - .env
@@ -14,6 +16,8 @@ services:
 
   backend:
     image: filipe0911/monitoramento_back_v1:latest
+    mem_limit: 645m
+    cpus: 1
     env_file:
       - .env
     environment:
@@ -39,6 +43,8 @@ services:
 
   frontend:
     image: filipe0911/monitoramento_front_v1:latest
+    mem_limit: 64m
+    cpus: 0.125
     environment:
       VITE_LOGIN_API: /api
     networks:
@@ -50,6 +56,8 @@ services:
  
   nginx:
     image: nginx:alpine
+    mem_limit: 64m
+    cpus: 0.125
     container_name: nginx_lb
     ports:
       - "80:80"
