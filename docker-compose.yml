@@ -10,6 +10,7 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - app-network
+    restart: always
 
   backend:
     image: filipe0911/monitoramento_back_v1:latest
@@ -34,6 +35,7 @@ services:
       timeout: 3s
       retries: 15
       start_period: 20s
+    restart: always
 
   frontend:
     image: filipe0911/monitoramento_front_v1:latest
@@ -58,6 +60,7 @@ services:
       - backend
     networks:
       - app-network
+    restart: always
 
 networks:
   app-network:
