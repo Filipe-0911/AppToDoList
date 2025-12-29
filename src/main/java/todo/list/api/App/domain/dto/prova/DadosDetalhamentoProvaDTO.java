@@ -9,6 +9,7 @@ import todo.list.api.App.domain.dto.materia.DadosDetalhamentoMateriaDTO;
 import todo.list.api.App.domain.dto.mediaquestoes.MediaQuestoesPorAssuntoDTO;
 import todo.list.api.App.domain.model.Prova;
 import todo.list.api.App.domain.repository.EstatisticaQuestaoRepository;
+import todo.list.api.App.domain.services.DataService;
 
 
 public record DadosDetalhamentoProvaDTO(
@@ -16,18 +17,20 @@ public record DadosDetalhamentoProvaDTO(
     String titulo,
     LocalDateTime data,
     String corDaProva,
+    int numeroDeDiasAteAProva,
     List<DadosDetalhamentoMateriaDTO> listaDeMaterias
 ) {
 
     public DadosDetalhamentoProvaDTO(Prova prova) {
         this(
-            prova.getId(), 
-            prova.getTitulo(), 
-            prova.getDataDaProva(),
-            prova.getHexadecimalCorProva(),
-            prova.getListaDeMaterias().stream()
-                .map(DadosDetalhamentoMateriaDTO::new)
-                .toList()
+                prova.getId(),
+                prova.getTitulo(),
+                prova.getDataDaProva(),
+                prova.getHexadecimalCorProva(),
+                DataService.calculaDiasEntreDatas(LocalDateTime.now(), prova.getDataDaProva()),
+                prova.getListaDeMaterias().stream()
+                    .map(DadosDetalhamentoMateriaDTO::new)
+                    .toList()
             );
     }
 
@@ -37,6 +40,7 @@ public record DadosDetalhamentoProvaDTO(
                 prova.getTitulo(),
                 prova.getDataDaProva(),
                 prova.getHexadecimalCorProva(),
+                DataService.calculaDiasEntreDatas(LocalDateTime.now(), prova.getDataDaProva()),
                 prova.getListaDeMaterias().stream()
                         .map(materia -> new DadosDetalhamentoMateriaDTO(
                                 materia.getId(),

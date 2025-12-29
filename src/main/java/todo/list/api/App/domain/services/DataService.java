@@ -1,7 +1,9 @@
 package todo.list.api.App.domain.services;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,5 +22,10 @@ public class DataService {
 
     public String somaDiasADataInformada(LocalDateTime dataInformada, Long quantidadeDeDias) {
         return DataService.toString(dataInformada.plusDays(quantidadeDeDias));
+    }
+
+    public static int calculaDiasEntreDatas(LocalDateTime dataInicial, LocalDateTime dataFinal) {
+        Duration duracao = Duration.between(dataInicial, dataFinal);
+        return (int) duracao.toDays();
     }
 }

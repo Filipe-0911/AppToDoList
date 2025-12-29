@@ -27,6 +27,7 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<DadosUsuarioDTO> retornaDadosUsuario(HttpServletRequest httpServletRequest) {
         Usuario usuarioBuscado = usuarioService.buscaUsuario(httpServletRequest);
+
         return ResponseEntity.ok(new DadosUsuarioDTO(usuarioBuscado, httpServletRequest.getHeader("Authorization")));
     }
     @Transactional
